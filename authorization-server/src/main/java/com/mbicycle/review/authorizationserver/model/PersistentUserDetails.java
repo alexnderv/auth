@@ -8,7 +8,6 @@ import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import lombok.AllArgsConstructor;
@@ -33,8 +32,8 @@ public class PersistentUserDetails implements UserDetails {
   private Boolean expired;
   private Boolean locked;
   private Boolean credentialsExpired;
-  // fixme fix lazy initialization properly (JPQL query)
-  @ElementCollection(fetch = FetchType.EAGER)
+
+  @ElementCollection
   @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
   @Column(name = "role")
   @Enumerated(EnumType.STRING)

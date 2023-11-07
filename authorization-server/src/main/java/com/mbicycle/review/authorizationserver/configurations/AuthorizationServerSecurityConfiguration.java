@@ -41,7 +41,7 @@ import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 @EnableWebSecurity
 public class AuthorizationServerSecurityConfiguration {
 
-  // localhost:8081/oauth2/authorize?response_type=code&client_id=test-client&redirect_uri=http://127.0.0.1:8080/ok
+  // localhost:8081/oauth2/authorize?response_type=code&client_id=test-client&redirect_uri=http://127.0.0.1:8080/me
 
   @Bean
   @Order(1)
@@ -85,51 +85,11 @@ public class AuthorizationServerSecurityConfiguration {
                 .accessTokenTimeToLive(Duration.ofMinutes(30))
                 .refreshTokenTimeToLive(Duration.ofHours(24))
                 .build())
-        .redirectUri("http://127.0.0.1:8080/ok")
+        .redirectUri("http://localhost:8080/me")
         .scope("read")
         .scope("write")
         .build();
     return new InMemoryRegisteredClientRepository(registeredClient);
-  }
-
-  @Bean
-  PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
-  }
-
-  @Bean
-  JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
-    return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
-  }
-
-  @Bean
-  AuthorizationServerSettings authorizationServerSettings() {
-    return AuthorizationServerSettings.builder()
-        .issuer("http://localhost:8081")
-        .build();
-  }
-
-  @Bean
-  JWKSource<SecurityContext> jwkSource() throws NoSuchAlgorithmException {
-    RSAKey rsaKey = generateRsa();
-    JWKSet jwkSet = new JWKSet(rsaKey);
-    return (jwkSelector, securityContext) -> jwkSelector.select(jwkSet);
-  }
-
-  private static RSAKey generateRsa() throws NoSuchAlgorithmException {
-    KeyPair keyPair = generateRsaKey();
-    RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
-    RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
-    return new RSAKey.Builder(publicKey)
-        .privateKey(privateKey)
-        .keyID(UUID.randomUUID().toString())
-        .build();
-  }
-
-  private static KeyPair generateRsaKey() throws NoSuchAlgorithmException {
-    KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-    keyPairGenerator.initialize(2048);
-    return keyPairGenerator.generateKeyPair();
   }
 
 }
