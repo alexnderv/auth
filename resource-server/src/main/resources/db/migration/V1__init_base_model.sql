@@ -16,3 +16,5 @@ create table phone_number
 
     constraint fk_number_user foreign key (user_id) references auth_user (id)
 );
+
+create sequence auth_user_id_seq start with 2 increment by 1;

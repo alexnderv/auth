@@ -3,13 +3,14 @@ package com.mbicycle.review.authorizationserver.services;
 import java.util.Collections;
 
 import com.mbicycle.review.authorizationserver.dao.UserDetailsDao;
-import com.mbicycle.review.authorizationserver.model.UserRole;
 import com.mbicycle.review.authorizationserver.model.PersistentUserDetails;
+import com.mbicycle.review.authorizationserver.model.UserRole;
 import com.mbicycle.review.authorizationserver.registration.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 public class PersistentUserDetailsService implements UserDetailsService {
 
   private final UserDetailsDao dao;
+  private final PasswordEncoder encoder;
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -27,8 +29,12 @@ public class PersistentUserDetailsService implements UserDetailsService {
   public PersistentUserDetails createUser(UserDto source) {
     PersistentUserDetails target = PersistentUserDetails.builder()
         .username(source.getUsername())
-        .password(source.getPassword())
+        .password(encoder.encode(source.getPassword()))
         .authorities(Collections.singleton(UserRole.USER))
+        .credentialsExpired(false)
+        .expired(false)
+        .enabled(true)
+        .locked(false)
         .build();
     return dao.save(target);
   }

@@ -4,12 +4,12 @@ server:
     context-path: /
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5000/postgres?currentSchema=auth
+    url: jdbc:postgresql://auth-server-db:5432/postgres?currentSchema=public
     username: auth_user
     password: 111
   data:
     redis:
-      host: localhost
+      host: redis-revoke-token-storage
       port: 6379
 
 logging:

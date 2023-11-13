@@ -2,6 +2,7 @@ package io.mbicycle.review.backend;
 
 import java.util.Set;
 
+import io.mbicycle.review.backend.dto.AccessTokenStatusDto;
 import io.mbicycle.review.backend.model.User;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,6 @@ public interface AuthorizationServerClient {
   @DeleteMapping("/some")
   void deleteSome(@RequestBody Set<User> users);
 
-  @PostMapping("/tokens/active")
-  ResponseEntity<Boolean> isTokenActive(@RequestHeader(name = "Authorization") String token);
+  @PostMapping("/token/status")
+  ResponseEntity<AccessTokenStatusDto> isTokenRevoked(@RequestHeader(name = "Token") String token);
 }

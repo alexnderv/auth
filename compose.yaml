@@ -2,25 +2,43 @@ services:
   
   auth-server:
     image: auth-server
+    ports:
+      - '8081:8081'
+    build:
+      context: ./authorization-server
+      dockerfile: Dockerfile
+    depends_on:
+      - auth-server-db
+      - redis-revoke-token-storage
   
   resource-server:
     image: resource-server
+    ports:
+      - '8080:8080'
+    build:
+      context: ./resource-server
+      dockerfile: Dockerfile
+    depends_on:
+      - auth-server
+      - resource-server-db
+
+#  frontend:
+#    image: frontend
+#    build:
+#        context: ./frontend
+#        dockerfile: Dockerfile
 
   auth-server-db:
     image: 'postgres:latest'
     environment:
-      - 'POSTGRES_USER=auth'
+      - 'POSTGRES_USER=auth_user'
       - 'POSTGRES_PASSWORD=111'
-    ports:
-      - '5000:5432'
 
   resource-server-db:
     image: 'postgres:latest'
     environment:
-      - 'POSTGRES_USER=resource'
+      - 'POSTGRES_USER=resource_user'
       - 'POSTGRES_PASSWORD=111'
-    ports:
-      - '5001:5432'
 
-  frontend:
-    image: frontend
+  redis-revoke-token-storage:
+    image: 'redis:latest'

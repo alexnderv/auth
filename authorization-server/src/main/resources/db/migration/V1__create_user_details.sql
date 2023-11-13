@@ -1,21 +1,23 @@
-CREATE TABLE persistent_user_details
+create table persistent_user_details
 (
-    id                  BIGINT PRIMARY KEY,
+    id                  bigint       not null,
 
-    username            VARCHAR(255) NOT NULL,
-    password            VARCHAR(255) NOT NULL,
-    enabled             BOOLEAN      NOT NULL DEFAULT TRUE,
-    expired             BOOLEAN      NOT NULL DEFAULT FALSE,
-    locked              BOOLEAN      NOT NULL DEFAULT FALSE,
-    credentials_expired BOOLEAN      NOT NULL DEFAULT FALSE
+    username            varchar(255) not null,
+    password            varchar(255) not null,
+    enabled             boolean      not null default true,
+    expired             boolean      not null default false,
+    locked              boolean      not null default false,
+    credentials_expired boolean      not null default false,
+
+    primary key (id)
 );
 
-CREATE TABLE user_role
+create table user_role
 (
-    id        BIGINT PRIMARY KEY,
+    user_id bigint       not null,
+    role    varchar(255) not null,
 
-    user_id   BIGINT NOT NULL,
-    role VARCHAR(255) NOT NULL,
-
-    CONSTRAINT fk_role_user_id FOREIGN KEY (user_id) REFERENCES persistent_user_details (id)
+    constraint fk_role_user_id foreign key (user_id) references persistent_user_details (id)
 );
+
+create sequence user_details_seq start with 2 increment by 1;

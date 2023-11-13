@@ -8,8 +8,11 @@ import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.SequenceGenerator;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -21,9 +24,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
+@SequenceGenerator(name = "user_details_seq", sequenceName = "user_details_seq", allocationSize = 1)
 public class PersistentUserDetails implements UserDetails {
 
   @Id
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_details_seq")
   private Long id;
   private String username;
   private String password;
