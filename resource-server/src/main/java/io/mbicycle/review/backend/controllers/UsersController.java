@@ -74,6 +74,13 @@ public class UsersController {
     return ResponseEntity.ok(mapper.map(registered, UserDto.class));
   }
 
+  @GetMapping
+  @RolesAllowed("ADMIN")
+  public ResponseEntity<PageDto> getPage(Pageable pageRequest) {
+    Page<User> users = userService.getPage(pageRequest);
+    return ResponseEntity.ok(mapper.map(users, PageDto.class));
+  }
+
   @RequestMapping("/search")
   @RolesAllowed("ADMIN")
   public ResponseEntity<List<UserSimpleDto>> getPage(@RequestParam("query") String query) {
