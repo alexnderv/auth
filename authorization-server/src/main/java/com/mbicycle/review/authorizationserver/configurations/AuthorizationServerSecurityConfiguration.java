@@ -38,6 +38,7 @@ public class AuthorizationServerSecurityConfiguration {
 
     http
         .securityMatcher(endpointsMatcher)
+        .cors(Customizer.withDefaults())
         .authorizeHttpRequests(authorize ->
             authorize
                 .requestMatchers("/token/status", "/logout").permitAll()
@@ -65,6 +66,7 @@ public class AuthorizationServerSecurityConfiguration {
   SecurityFilterChain configureLoginLogout(HttpSecurity http, RevokedTokenLogoutHandler handler) throws Exception {
     return http
         .csrf(AbstractHttpConfigurer::disable)
+        .cors(Customizer.withDefaults())
         .formLogin(Customizer.withDefaults())
         .logout(logout -> logout.logoutSuccessHandler(handler))
         .build();
@@ -83,7 +85,8 @@ public class AuthorizationServerSecurityConfiguration {
                 .accessTokenTimeToLive(Duration.ofMinutes(30))
                 .refreshTokenTimeToLive(Duration.ofHours(24))
                 .build())
-        .redirectUri("http://localhost:8080/me")
+        .redirectUri("http://localhost:3000/me")
+        .redirectUri("http://frontend:3000/me")
         .scope("read")
         .scope("write")
         .build();

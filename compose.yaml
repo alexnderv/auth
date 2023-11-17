@@ -22,11 +22,16 @@ services:
       - auth-server
       - resource-server-db
 
-#  frontend:
-#    image: frontend
-#    build:
-#        context: ./frontend
-#        dockerfile: Dockerfile
+  frontend:
+    image: frontend
+    ports:
+      - '3000:3000'
+    build:
+        context: ./frontend
+        dockerfile: Dockerfile
+    depends_on:
+      - auth-server
+      - resource-server
 
   auth-server-db:
     image: 'postgres:latest'

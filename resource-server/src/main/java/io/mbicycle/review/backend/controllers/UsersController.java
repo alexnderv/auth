@@ -12,6 +12,7 @@ import io.mbicycle.review.backend.services.UserService;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.security.RolesAllowed;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -71,13 +72,6 @@ public class UsersController {
   public ResponseEntity<UserDto> create(@RequestBody @Validated(UserDto.CreateUser.class) UserDto dto) {
     User registered = userService.register(mapper.map(dto, User.class));
     return ResponseEntity.ok(mapper.map(registered, UserDto.class));
-  }
-
-  @GetMapping
-  @RolesAllowed("ADMIN")
-  public ResponseEntity<PageDto> getPage(Pageable pageRequest) {
-    Page<User> users = userService.getPage(pageRequest);
-    return ResponseEntity.ok(mapper.map(users, PageDto.class));
   }
 
   @RequestMapping("/search")

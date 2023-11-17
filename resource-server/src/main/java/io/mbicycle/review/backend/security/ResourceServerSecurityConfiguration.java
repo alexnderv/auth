@@ -44,6 +44,7 @@ public class ResourceServerSecurityConfiguration {
 
     return http
         .csrf(AbstractHttpConfigurer::disable)
+        .cors(Customizer.withDefaults())
         .authorizeHttpRequests(a -> a.requestMatchers("/users/fill-profile").permitAll())
         .authorizeHttpRequests(a -> a.anyRequest().authenticated())
         .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))

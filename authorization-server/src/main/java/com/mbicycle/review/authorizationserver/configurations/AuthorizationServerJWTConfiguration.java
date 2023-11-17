@@ -60,7 +60,7 @@ public class AuthorizationServerJWTConfiguration {
   @Bean
   AuthorizationServerSettings authorizationServerSettings() {
     return AuthorizationServerSettings.builder()
-        .issuer("http://localhost:8081")
+        .issuer("http://auth-server:8081")
         .build();
   }
 
