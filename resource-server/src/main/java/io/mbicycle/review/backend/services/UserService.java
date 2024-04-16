@@ -3,7 +3,6 @@ package io.mbicycle.review.backend.services;
 import java.util.List;
 import java.util.Optional;
 
-import io.mbicycle.review.backend.AuthorizationServerClient;
 import io.mbicycle.review.backend.dao.UserDao;
 import io.mbicycle.review.backend.model.User;
 import lombok.AllArgsConstructor;

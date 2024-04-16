@@ -4,7 +4,6 @@ package com.mbicycle.review.authorizationserver.configurations;
 import java.time.Duration;
 import java.util.UUID;
 
-import com.mbicycle.review.authorizationserver.services.RevokedTokenLogoutHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -12,7 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
@@ -62,17 +60,6 @@ public class AuthorizationServerSecurityConfiguration {
   }
 
   @Bean
-  @Order(2)
-  SecurityFilterChain configureLoginLogout(HttpSecurity http, RevokedTokenLogoutHandler handler) throws Exception {
-    return http
-        .csrf(AbstractHttpConfigurer::disable)
-        .cors(Customizer.withDefaults())
-        .formLogin(Customizer.withDefaults())
-        .logout(logout -> logout.logoutSuccessHandler(handler))
-        .build();
-  }
-
-  @Bean
   RegisteredClientRepository configureDefaultClient(PasswordEncoder encoder) {
     RegisteredClient registeredClient = RegisteredClient.withId(UUID.randomUUID().toString())
         .clientId("test-client")
@@ -85,8 +72,8 @@ public class AuthorizationServerSecurityConfiguration {
                 .accessTokenTimeToLive(Duration.ofMinutes(30))
                 .refreshTokenTimeToLive(Duration.ofHours(24))
                 .build())
-        .redirectUri("http://localhost:3000/me")
-        .redirectUri("http://frontend:3000/me")
+        .redirectUri("http://localhost:80/me")
+        .redirectUri("http://frontend:80/me")
         .scope("read")
         .scope("write")
         .build();

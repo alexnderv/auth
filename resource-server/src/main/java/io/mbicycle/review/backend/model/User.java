@@ -1,5 +1,6 @@
 package io.mbicycle.review.backend.model;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import jakarta.persistence.CollectionTable;
@@ -33,6 +34,8 @@ public class User {
   private String email;
   private String firstName;
   private String lastName;
+  private BigDecimal rate;
+
   @ElementCollection
   @CollectionTable(name = "phone_number", joinColumns = @JoinColumn(name = "user_id"))
   @Column(name = "number")

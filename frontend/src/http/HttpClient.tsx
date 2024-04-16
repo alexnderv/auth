@@ -6,7 +6,7 @@ import {CookieStorage} from "../utils/CookieStorage";
 import {UsersPage} from "../dto/UsersPage";
 
 export const AUTH_SERVER_URL = "http://localhost:8081";
-export const RESOURCE_SERVER_URL = "http://localhost:8080";
+export const RESOURCE_SERVER_URL = "http://localhost:8082";
 export const CLIENT_ID = "test-client";
 export const CLIENT_SECRET = "secret";
 export const REDIRECT_URI = "http://localhost:3000/me";
