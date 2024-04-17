@@ -74,7 +74,7 @@ public class AuthorizationServerSecurityConfiguration {
                 .build())
         .redirectUri("http://localhost:3000/me")
         .redirectUri("http://frontend:3000/me")
-        .redirectUri("http://185.96.163.138:3000/me")
+        .redirectUri("http://185.96.163.138:3333/me")
         .scope("read")
         .scope("write")
         .build();
