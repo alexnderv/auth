@@ -39,7 +39,7 @@ public class AuthorizationServerSecurityConfiguration {
         .cors(Customizer.withDefaults())
         .authorizeHttpRequests(authorize ->
             authorize
-                .requestMatchers("/token/status", "/logout").permitAll()
+                .requestMatchers("/logout").permitAll()
                 .anyRequest().authenticated()
         )
         .csrf(csrf -> csrf.ignoringRequestMatchers(endpointsMatcher))
@@ -72,8 +72,9 @@ public class AuthorizationServerSecurityConfiguration {
                 .accessTokenTimeToLive(Duration.ofMinutes(30))
                 .refreshTokenTimeToLive(Duration.ofHours(24))
                 .build())
-        .redirectUri("http://localhost:80/me")
-        .redirectUri("http://frontend:80/me")
+        .redirectUri("http://localhost:3000/me")
+        .redirectUri("http://frontend:3000/me")
+        .redirectUri("http://185.96.163.138:3000/me")
         .scope("read")
         .scope("write")
         .build();

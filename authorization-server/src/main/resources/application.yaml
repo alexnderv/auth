@@ -7,10 +7,6 @@ spring:
     url: jdbc:postgresql://auth-server-db:5432/postgres?currentSchema=public
     username: auth_user
     password: 111
-  data:
-    redis:
-      host: redis-revoke-token-storage
-      port: 6379
 
 logging:
   level:
