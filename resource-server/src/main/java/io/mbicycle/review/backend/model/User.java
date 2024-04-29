@@ -35,6 +35,13 @@ public class User {
   private String firstName;
   private String lastName;
   private BigDecimal rate;
+  private String photo;
+  private Integer age;
+  private String job;
+  private String bio;
+  private String country;
+  private String city;
+  private String quote;
 
   @ElementCollection
   @CollectionTable(name = "phone_number", joinColumns = @JoinColumn(name = "user_id"))
