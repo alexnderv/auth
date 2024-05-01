@@ -1,7 +1,5 @@
 package com.mbicycle.review.authorizationserver.registration;
 
-import java.math.BigDecimal;
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
@@ -16,13 +14,4 @@ public class UserDto {
   @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[~`!@#$%^&*()_\\\\\\-+={}|:;\"'<,>.?/]).{8,100}$", message = "Not too strong password")
   private String password;
   private String role;
-
-  private BigDecimal rate;
-  private String photo;
-  private Integer age;
-  private String job;
-  private String bio;
-  private String country;
-  private String city;
-  private String quote;
 }

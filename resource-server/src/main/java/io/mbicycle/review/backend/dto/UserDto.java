@@ -1,5 +1,6 @@
 package io.mbicycle.review.backend.dto;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import jakarta.validation.constraints.NotBlank;
@@ -32,6 +33,15 @@ public class UserDto {
   private String lastName;
   @Size(max = 20, groups = { CreateUser.class, UpdateUser.class })
   private List<String> phoneNumbers;
+
+  private BigDecimal rate;
+  private String photo;
+  private Integer age;
+  private String job;
+  private String bio;
+  private String country;
+  private String city;
+  private String quote;
 
   public interface CreateUser {
 
