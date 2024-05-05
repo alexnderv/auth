@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://backend-server-db:5432/postgres?currentSchema=public
+    username: data_user
+    password: 111
+  jpa:
+    show-sql: true
+
+springdoc:
+  show-oauth2-endpoints: true
+  show-login-endpoint: true
+
+logging:
+  level:
+    root: debug
+default-admin:
+  id: 1

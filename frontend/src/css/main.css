@@ -1,0 +1,86 @@
+@import url('https://fonts.googleapis.com/css2?family=Brygada+1918:ital,wght@0,400;0,700;1,400;1,600&family=Caveat&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&family=Cormorant+Infant:ital,wght@0,300;0,600;1,300;1,600&family=Jost:wght@200;400;600&family=Jura:wght@300&family=Nunito+Sans:ital,opsz,wght@0,6..12,300;0,6..12,600;1,6..12,300;1,6..12,600&family=Raleway:ital,wght@0,300;0,600;1,300;1,600&family=Roboto+Mono:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Rubik:ital,wght@0,400;0,600;1,400;1,600&family=Sometype+Mono:wght@400;600&family=Ysabeau+Infant:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    background-color: rgb(212, 212, 212);
+    color: white;
+    font-family: 'Brygada 1918', serif;
+    font-family: 'Caveat', cursive;
+    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Cormorant Infant', serif;
+    font-family: 'Jost', sans-serif;
+    font-family: 'Jura', sans-serif;
+    font-family: 'Nunito Sans', sans-serif;
+    font-family: 'Raleway', sans-serif;
+    font-family: 'Roboto Mono', monospace;
+    font-family: 'Rubik', sans-serif;
+    font-family: 'Sometype Mono', monospace;
+    font-family: 'Ysabeau Infant', sans-serif;
+    font-weight: 400;
+}
+
+.mainText{
+    font-size: 55px;
+    font-style: italic;
+}
+
+.secondaryText{
+    font-size: 20px;
+}
+
+form button {
+    width: 100%;
+    cursor: pointer;
+    transition: transform 500ms ease;
+}
+
+form button:hover {
+    transform: scale(1.1);
+}
+
+
+.mainTextMbicycle{
+    padding: 50px 0px;
+    margin: 150px 0;
+    text-align: left;
+}
+
+@media (max-width: 500px) {
+    .mainImageMbicycle{
+        height: 10vh,
+    }
+
+    .mainTextMbicycle{
+        padding: 10px 0; 
+        margin: 50px 0px; 
+        height: 100%;
+    }
+}
+
+@media (max-width: 960px) {
+    .mainImageMbicycle{
+        height: 50vh,
+    }
+
+    .mainTextMbicycle{
+        padding: 30px 0; 
+        margin: 100px 0px; 
+        height: 100%;
+    }
+}
+
+@media (max-width: 760px) {
+    .mainImageMbicycle{
+        height: 40vh,
+    }
+
+    .mainTextMbicycle{
+        padding: 30px 0; 
+        margin: 80px 0px; 
+        height: 100%;
+    }
+}
