@@ -12,6 +12,8 @@ springdoc:
 
 logging:
   level:
-    root: debug
+    root: warn
+    io:
+      mbicycle: debug
 default-admin:
   id: 1

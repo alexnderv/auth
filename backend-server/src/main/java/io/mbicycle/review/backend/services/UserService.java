@@ -8,18 +8,27 @@ import io.mbicycle.review.backend.model.User;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
-public class UserService {
+public class UserService implements UserDetailsService {
 
   private final UserDao dao;
 
   @Transactional
   public User register(User source) {
     return dao.save(source);
+  }
+
+  @Override
+  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    return dao.findByUsername(username)
+        .orElseThrow();
   }
 
   public Optional<User> getSingle(Long id) {
@@ -54,7 +63,4 @@ public class UserService {
     return dao.findAllByNames(query.toLowerCase());
   }
 
-  public Optional<User> getSingleByCredentials(String username, String password) {
-    return null;
-  }
 }

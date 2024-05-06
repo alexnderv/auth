@@ -10,8 +10,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.crypto.bcrypt.BCrypt;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -30,7 +29,13 @@ public class ResourceServerSecurityConfiguration {
     return http
         .csrf(AbstractHttpConfigurer::disable)
         .cors(AbstractHttpConfigurer::disable)
-        .authorizeHttpRequests(a -> a.requestMatchers("/users/fill-profile").permitAll())
+        .formLogin(f -> f.defaultSuccessUrl("/users/me", true))
+        .httpBasic(Customizer.withDefaults())
+        .authorizeHttpRequests(
+            authorize ->
+                authorize
+                    .requestMatchers("/login").permitAll()
+                    .anyRequest().authenticated())
         .build();
   }
 
@@ -47,14 +52,12 @@ public class ResourceServerSecurityConfiguration {
             "/webjars/**",
             // -- Swagger UI v3 (OpenAPI)
             "/v3/api-docs/**",
-            "/swagger-ui/**",
-            // auth stuff
-            "/auth/**");
+            "/swagger-ui/**");
   }
 
   @Bean
   PasswordEncoder passwordEncoder() {
-    return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    return new BCryptPasswordEncoder();
   }
 
 
