@@ -23,6 +23,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,6 +43,7 @@ public class UsersController {
   private final UserService userService;
   private final Sender sender;
   private final ModelMapper mapper;
+  private final PasswordEncoder passwordEncoder;
 
   @PostConstruct
   public void registerUserMappings() {
@@ -62,13 +64,15 @@ public class UsersController {
 
     mapper.createTypeMap(UserDto.class, User.class)
         .addMappings(m -> m.using(toLowerCaseFirstLetter).map(UserDto::getFirstName, User::setFirstName))
-        .addMappings(m -> m.using(toLowerCaseFirstLetter).map(UserDto::getLastName, User::setLastName));
+        .addMappings(m -> m.using(toLowerCaseFirstLetter).map(UserDto::getLastName, User::setLastName))
+        .addMappings(m -> m.map(UserDto::getPassword, (destination, value) -> destination.setPassword(passwordEncoder.encode(value.toString()))));
   }
 
   @Value("${default-admin.id}")
   private Long defaultUserId;
 
-  @PostMapping("/fill-profile")
+  @PostMapping("/register")
+  @RolesAllowed("ADMIN")
   public ResponseEntity<UserDto> create(@RequestBody @Validated(UserDto.CreateUser.class) UserDto dto) {
     User registered = userService.register(mapper.map(dto, User.class));
     return ResponseEntity.ok(mapper.map(registered, UserDto.class));

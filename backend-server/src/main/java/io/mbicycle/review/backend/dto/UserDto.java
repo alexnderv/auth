@@ -25,6 +25,7 @@ public class UserDto {
   @NotBlank(message = "The username is required", groups = CreateUser.class)
   @Length(min = 8, max = 100, groups = { CreateUser.class, UpdateUser.class })
   private String username;
+  private String password;
   @NotBlank(message = "The first name is required", groups = CreateUser.class)
   @Length(min = 1, max = 100, message = "The first name must be between 1 and 100 length", groups = { CreateUser.class, UpdateUser.class })
   private String firstName;

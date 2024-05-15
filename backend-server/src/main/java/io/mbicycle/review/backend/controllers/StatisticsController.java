@@ -22,8 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class StatisticsController {
 
-  private TimeLogService timeLogService;
-  private UserService userService;
+  private final TimeLogService timeLogService;
+  private final UserService userService;
 
   @GetMapping("/salary")
   @ResponseBody
