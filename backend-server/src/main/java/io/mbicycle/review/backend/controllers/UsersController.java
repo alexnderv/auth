@@ -1,6 +1,7 @@
 package io.mbicycle.review.backend.controllers;
 
 import java.util.List;
+import java.util.Optional;
 
 import io.mbicycle.review.backend.dto.PageDto;
 import io.mbicycle.review.backend.dto.UserContactsDto;
@@ -55,17 +56,23 @@ public class UsersController {
 
     mapper.createTypeMap(User.class, UserDto.class)
         .addMappings(m -> m.using(toUpperCaseFirstLetter).map(User::getFirstName, UserDto::setFirstName))
-        .addMappings(m -> m.using(toUpperCaseFirstLetter).map(User::getLastName, UserDto::setLastName));
+        .addMappings(m -> m.using(toUpperCaseFirstLetter).map(User::getLastName, UserDto::setLastName))
+        .addMappings(m -> m.map(User::getPassword, (userDto, o) -> userDto.setPassword(null)));
 
     Converter<String, String> toLowerCaseFirstLetter = ctx -> {
       String source = ctx.getSource();
       return source.substring(0, 1).toLowerCase() + source.substring(1);
     };
 
+    Converter<String, String> encodePassword = ctx ->
+        Optional.ofNullable(ctx.getSource())
+          .map(passwordEncoder::encode)
+          .orElse("");
+
     mapper.createTypeMap(UserDto.class, User.class)
         .addMappings(m -> m.using(toLowerCaseFirstLetter).map(UserDto::getFirstName, User::setFirstName))
         .addMappings(m -> m.using(toLowerCaseFirstLetter).map(UserDto::getLastName, User::setLastName))
-        .addMappings(m -> m.map(UserDto::getPassword, (destination, value) -> destination.setPassword(passwordEncoder.encode(value.toString()))));
+        .addMappings(m -> m.using(encodePassword).map(UserDto::getPassword, User::setPassword));
   }
 
   @Value("${default-admin.id}")
