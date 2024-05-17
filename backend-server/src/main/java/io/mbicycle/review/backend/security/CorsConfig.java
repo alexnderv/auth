@@ -14,8 +14,10 @@ public class CorsConfig {
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     CorsConfiguration configuration = new CorsConfiguration();
     configuration.addAllowedOrigin("http://localhost:3000");
+    configuration.addAllowedOrigin("http://localhost:3001");
     configuration.addAllowedOrigin("http://localhost:3333");
     configuration.addAllowedOrigin("http://127.0.0.1:3000");
+    configuration.addAllowedOrigin("http://127.0.0.1:3001");
     configuration.addAllowedOrigin("http://127.0.0.1:3333");
     configuration.addAllowedOrigin("http://frontend:3000");
     configuration.addAllowedOrigin("http://frontend:3333");
