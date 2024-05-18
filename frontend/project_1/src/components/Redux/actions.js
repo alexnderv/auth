@@ -2,7 +2,7 @@ import { setUsersAction, addUserAction, editUserAction, deleteUserAction } from 
 
 export const getUsers = () => async (dispatch) => {
   try {
-    const response = await fetch('http://localhost:8082/users');
+    const response = await fetch('http://localhost:8082/get/users');
     const data = await response.json();
     dispatch(setUsersAction(data));
   } catch (error) {
@@ -12,7 +12,7 @@ export const getUsers = () => async (dispatch) => {
 
 export const addUser = (user) => async (dispatch) => {
   try {
-    const response = await fetch('http://localhost:8081/users/register', {
+    const response = await fetch('http://localhost:8082/users/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -20,7 +20,7 @@ export const addUser = (user) => async (dispatch) => {
       body: JSON.stringify(user),
     });
     const data = await response.json();
-    dispatch(addUserAction(data));
+    dispatch({ type: 'ADD_USER', payload: data });
   } catch (error) {
     console.error(error);
   }

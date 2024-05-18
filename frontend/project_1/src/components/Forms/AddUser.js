@@ -88,8 +88,10 @@ function AddUser({ user, onAdd, onEdit }) {
       }
       setFormData({
         username: "",
+        firstname: "",
+        lastname:"",
+        phoneNumbers: "",
         password:"",
-        role: "",
         rate: 0,
         photo: "",
         age: 1,
@@ -173,8 +175,9 @@ function AddUser({ user, onAdd, onEdit }) {
       {Object.keys(formData).map((key) => (
         errors[key] && key !== 'global' && <div key={key} style={{ color: "red" }}>{errors[key]}</div>
       ))}
-
-      <TextField className={classes.input} variant="standard" label="Имя и фамилия" name="username" value={formData.username} onChange={handleChange}/>
+      <TextField className={classes.input} variant="standard" label="Имя" name="firstname" value={formData.firstname} onChange={handleChange}/>
+      <TextField className={classes.input} variant="standard" label="Фамилия" name="lastname" value={formData.lastname} onChange={handleChange}/>
+      <TextField className={classes.input} variant="standard" label="Логин" name="username" value={formData.username} onChange={handleChange}/>
       <TextField className={classes.input} variant="standard" label="Пароль" name="password" value={formData.password} onChange={handleChange}  type="password"/>
       <TextField className={classes.input} variant="standard" label="Роль" name="role" value={formData.role} onChange={handleChange}/>
       <TextField className={classes.input} variant="standard" label="Ставка" name="rate" value={formData.rate} onChange={handleChange}/>

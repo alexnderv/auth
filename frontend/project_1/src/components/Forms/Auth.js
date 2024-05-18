@@ -3,7 +3,7 @@ import Button from "@mui/material/Button";
 import { makeStyles } from "@mui/styles";
 import TextField from "@mui/material/TextField";
 
-function EntrUser({ user }) {
+function Auth({ user }) {
 
   const [formData, setFormData] = useState({
     username: "",
@@ -33,13 +33,47 @@ function EntrUser({ user }) {
       newErrors.username = "Логин пользователя должно содержать не менее 3 символов";
     }
 
-    if (formData.password.length < 6) {
-      newErrors.password = "Пароль должен содержать не менее 6 символов";
+    if (formData.password.length < 2) {
+      newErrors.password = "Пароль должен содержать не менее 3 символов";
     }
 
     setErrors(newErrors);
 
     return Object.keys(newErrors).length === 0;
+  };
+
+  // Функция для отправки запроса авторизации
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
+    // отправка запроса авторизации на сервер
+    try {
+      const response = await fetch('http://localhost:8082/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Cookie': 'PHPSESSID=t9k86qubdkgbbd3ur891gijtp1; JSESSIONID=AC1820E214E4DF3DBAEEA03508207355',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      // Обработка ответа сервера
+      if (response.ok) {
+        // Успешная авторизация
+        console.log('Успешная авторизация', data);
+      } else {
+        // Ошибка авторизации
+        setErrors({ global: data.message });
+      }
+    } catch (error) {
+      console.error('Ошибка авторизации:', error);
+    }
   };
 
 
@@ -106,8 +140,8 @@ function EntrUser({ user }) {
   const classes = useStyles();
 
   return (
-    <form className={classes.form}>
-      <div className={classes.label}>Авторизация сотрудника</div>
+    <form className={classes.form} onSubmit={handleSubmit}>
+      <div className={classes.label}>Авторизация</div>
 
       {errors.global && <div style={{ color: "red" }}>{errors.global}</div>}
       {Object.keys(formData).map((key) => (
@@ -117,9 +151,9 @@ function EntrUser({ user }) {
       <TextField className={classes.input} variant="standard" label="Логин" name="username" value={formData.username} onChange={handleChange}/>
       <TextField className={classes.input} variant="standard" label="Пароль" name="password" type="password" value={formData.password} onChange={handleChange}/>
 
-      <Button type="submit"  className={classes.button}>Вход</Button>
+      <Button type="submit"  className={classes.button} >Вход</Button>
     </form>
   );
 }
 
-export default EntrUser;
+export default Auth;

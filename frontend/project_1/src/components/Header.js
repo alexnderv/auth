@@ -184,8 +184,7 @@ function Header() {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem component={Link} to="/entrAdmin" color="inherit" disabled={activePath === "/entrAdmin"} onClick={() => {handlePathChange("/entrAdmin"); handleClose()}}>Вход как администратор</MenuItem>
-                <MenuItem component={Link} to="/entrUser" color="inherit" disabled={activePath === "/entrUser"} onClick={() => {handlePathChange("/entrUser"); handleClose()}}>Вход как сотрудник</MenuItem>
+                <MenuItem component={Link} to="/auth" color="inherit" disabled={activePath === "/auth"} onClick={() => {handlePathChange("/auth"); handleClose()}}>Авторизоваться</MenuItem>
               </Menu>
             </div>
           )}

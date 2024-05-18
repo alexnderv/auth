@@ -14,9 +14,8 @@ import ProjectsPage from "./components/Cards/ProjectsPage";
 import JavaUsers from "./components/Users/JavaUsers";
 import NETUsers from "./components/Users/NETUsers";
 import FlutterUsers from "./components/Users/FlutterUsers";
-import EntrUser from "./components/Forms/EntrUser";
-import EntrAdmin from "./components/Forms/EntrAdmin";
-import UserAccaunt from "./components/Accaunts/UserAccaunt";
+import Auth from "./components/Forms/Auth";
+import Footer from "./components/Footer";
 
 function App() {
   return (
@@ -36,23 +35,16 @@ function App() {
               }
             />
 
-            <Route path="/userAccaunt" element={
+            {/* <Route path="/userAccaunt" element={
                 <aside>
                   <UserAccaunt />
                 </aside>
               }
-            />
+            /> */}
 
-            <Route path="/entrUser" element={
+            <Route path="/auth" element={
                 <aside>
-                  <EntrUser />
-                </aside>
-              }
-            />
-
-            <Route path="/entrAdmin" element={
-                <aside>
-                  <EntrAdmin />
+                  <Auth />
                 </aside>
               }
             />
@@ -91,6 +83,7 @@ function App() {
             <Route path="/flutter-users" element={ <FlutterUsers /> } />
 
           </Routes>
+          <Footer />
         </div>
       </BrowserRouter>
     </Provider>
