@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, {useState} from "react";
 import Button from "@mui/material/Button";
-import { makeStyles } from "@mui/styles";
+import {makeStyles} from "@mui/styles";
 import TextField from "@mui/material/TextField";
 
 function Auth({ user }) {
@@ -52,24 +52,23 @@ function Auth({ user }) {
 
     // отправка запроса авторизации на сервер
     try {
-      const response = await fetch('http://localhost:8082/users', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Cookie': 'PHPSESSID=t9k86qubdkgbbd3ur891gijtp1; JSESSIONID=AC1820E214E4DF3DBAEEA03508207355',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
+      const response = await fetch(
+          'http://localhost:8082/login?username=' + formData.username + "&password=" + formData.password,
+          {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              }
+          });
 
       // Обработка ответа сервера
       if (response.ok) {
         // Успешная авторизация
-        console.log('Успешная авторизация', data);
+        console.log('Успешная авторизация');
+        // todo вот здесь нужно достать cookie и сохранить где-то
       } else {
         // Ошибка авторизации
-        setErrors({ global: data.message });
+        setErrors({ global: "Неправильный логин или пароль" });
       }
     } catch (error) {
       console.error('Ошибка авторизации:', error);
@@ -85,7 +84,7 @@ function Auth({ user }) {
         height: "30%"
       },
       input: {
-        width: "100%", 
+        width: "100%",
       },
       button: {
         width: "100%",
@@ -93,7 +92,7 @@ function Auth({ user }) {
     },
     "@media (min-width: 601px)": {
       form: {
-        width: "100%", 
+        width: "100%",
       },
     },
     button: {
@@ -148,8 +147,24 @@ function Auth({ user }) {
         errors[key] && key !== 'global' && <div key={key} style={{ color: "red" }}>{errors[key]}</div>
       ))}
 
-      <TextField className={classes.input} variant="standard" label="Логин" name="username" value={formData.username} onChange={handleChange}/>
-      <TextField className={classes.input} variant="standard" label="Пароль" name="password" type="password" value={formData.password} onChange={handleChange}/>
+      <TextField
+          className={classes.input}
+          variant="standard"
+          label="Логин"
+          name="username"
+          value={formData.username}
+          onChange={handleChange}
+      />
+
+      <TextField
+          className={classes.input}
+          variant="standard"
+          label="Пароль"
+          name="password"
+          type="password"
+          value={formData.password}
+          onChange={handleChange}
+      />
 
       <Button type="submit"  className={classes.button} >Вход</Button>
     </form>

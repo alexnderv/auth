@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://backend-server-db:5432/postgres?currentSchema=public
+    url: jdbc:postgresql://172.18.0.2:5432/postgres?currentSchema=public
     username: data_user
     password: 111
   jpa:
@@ -9,7 +9,8 @@ spring:
 springdoc:
   show-oauth2-endpoints: true
   show-login-endpoint: true
-
+server:
+  port: 8082
 logging:
   level:
     root: warn
@@ -17,3 +18,4 @@ logging:
       mbicycle: debug
 default-admin:
   id: 1
+frontend-url: "http://localhost:3000"
