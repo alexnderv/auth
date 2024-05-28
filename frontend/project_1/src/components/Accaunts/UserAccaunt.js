@@ -11,6 +11,7 @@ import axios from "axios";
 const theme = createTheme();
 
 function UserAccaunt({ userData, onDelete }) {
+
   const navigate = useNavigate();
   const matchesMobile = useMediaQuery(theme.breakpoints.down("xs"));
   const matchesDesktop = useMediaQuery(theme.breakpoints.down("md"));
@@ -19,30 +20,18 @@ function UserAccaunt({ userData, onDelete }) {
 
   useEffect(() => {
     // Запрос данных пользователя с сервера
-    const fetchUser = async () => {
-      try {
-        const cookies = document.cookie.split(';').reduce((cookies, cookie) => {
-          const [name, value] = cookie.trim().split('=').map(decodeURIComponent);
-          cookies[name] = value;
-          return cookies;
-        }, {});
-        const token = cookies.JSESSIONID;
-        console.log(token);
-        const response = await axios.get("http://localhost:8082/users/me", {
-          headers: {
-            Cookie: `JSESSIONID=${token}`,
-          },
-        });
-        setFormData(response.data);
-        console.log(response.data)
-      } catch (err) {
-        console.error('Ошибка при получении данных пользователя:', err);
-        console.error(err.message);
-      }
-    };
-    if (document.cookie.includes('JSESSIONID')) {
-      fetchUser();
-    }
+    axios
+        .get(
+            "http://localhost:8082/users/me",
+            {
+                withCredentials: true
+            })
+        .then(response => {
+          console.log(response);
+          setFormData(response.data);
+        })
+        .catch(error => console.error('Ошибка при получении данных пользователя:', error));
+
   }, []);
 
   const handleEditClick = () => {

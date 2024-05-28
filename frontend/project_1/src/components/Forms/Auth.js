@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import Button from "@mui/material/Button";
 import {makeStyles} from "@mui/styles";
 import TextField from "@mui/material/TextField";
+import axios from "axios";
 
 function Auth({ user }) {
 
@@ -49,46 +50,37 @@ function Auth({ user }) {
     if (!validateForm()) {
       return;
     }
-  
-// отправка запроса авторизации на сервер
-try {
-  const response = await fetch(
-    'http://localhost:8082/login?username=' + formData.username + "&password=" + formData.password,
-      {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json'
+
+    // отправка запроса авторизации на сервер
+    axios
+        .post(
+            'http://localhost:8082/login',
+            {
+              username: formData.username,
+              password: formData.password
+            },
+            {
+              withCredentials: true,
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+              }
+            })
+        .then(response => {
+          console.log(response);
+          // Проверка, является ли авторизованный пользователь администратором
+          if (formData.username === 'admin@test.io') {
+            // Перенаправление на страницу /users для администратора
+            window.location.href = '/users';
+          } else {
+            // Перенаправление на страницу /user с ID пользователя
+            window.location.href = '/userAccaunt';
           }
-      });
+        })
+        .catch(error => {
+          console.log(error);
+          setErrors({global: "Неправильный логин или пароль"});
+        })
 
-  // Обработка ответа сервера
-  if (response.ok) {
-    // Успешная авторизация
-    console.log('Успешная авторизация');
-
-    // Получение и сохранение куки
-    const setCookieHeader = response.headers.get('Set-Cookie');
-    if (setCookieHeader) {
-      const cookieValue = setCookieHeader.split(';')[0];
-      document.cookie = cookieValue;
-      console.log("Cookie успешно установлен");
-    }
-
-    // Проверка, является ли авторизованный пользователь администратором
-    if (formData.username === 'admin@test.io') {
-      // Перенаправление на страницу /users для администратора
-      window.location.href = '/users';
-    } else {
-      // Перенаправление на страницу /user с ID пользователя
-      window.location.href = '/userAccaunt';
-    }
-  } else {
-    // Ошибка авторизации
-    setErrors({ global: "Неправильный логин или пароль" });
-  }
-} catch (error) {
-  console.error('Ошибка авторизации:', error);
-}
   }
 
 
