@@ -16,6 +16,8 @@ import NETUsers from "./components/Users/NETUsers";
 import FlutterUsers from "./components/Users/FlutterUsers";
 import Auth from "./components/Forms/Auth";
 import Footer from "./components/Footer";
+import UserAccaunt from "./components/Accaunts/UserAccaunt";
+import User from "./components/Users/User";
 
 function App() {
   return (
@@ -35,12 +37,18 @@ function App() {
               }
             />
 
-            {/* <Route path="/userAccaunt" element={
+            <Route path="/userAccaunt" element={
                 <aside>
                   <UserAccaunt />
                 </aside>
               }
-            /> */}
+            />
+             <Route path="/user" element={
+                <aside>
+                  <User />
+                </aside>
+              }
+            />
 
             <Route path="/auth" element={
                 <aside>
