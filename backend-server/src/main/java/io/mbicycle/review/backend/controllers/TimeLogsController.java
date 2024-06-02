@@ -2,6 +2,7 @@ package io.mbicycle.review.backend.controllers;
 
 import static java.util.Optional.ofNullable;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import io.mbicycle.review.backend.dto.TimeLogDto;
@@ -39,13 +40,38 @@ public class TimeLogsController {
   private final ModelMapper mapper;
 
   @PostMapping
-  public ResponseEntity<TimeLog> create(@RequestBody @Validated TimeLog timeLog) {
-    return ResponseEntity.ok(timeLogService.create(timeLog));
+  public ResponseEntity<TimeLog> create(
+      @RequestBody @Validated TimeLogDto source) {
+
+    User authenticatedUser = ofNullable(SecurityContextHolder.getContext())
+        .map(SecurityContext::getAuthentication)
+        .map(Authentication::getName)
+        .flatMap(this.userService::getSingleByUsername)
+        .orElseThrow(() -> new RuntimeException("Cannot find an authenticated user"));
+
+    TimeLog target = mapper.map(source, TimeLog.class);
+    target.setUser(authenticatedUser);
+    target.setUpdatedAt(LocalDate.now());
+
+    return ResponseEntity.ok(timeLogService.create(target));
   }
 
-  @PutMapping
-  public ResponseEntity<TimeLog> update(@RequestBody @Validated TimeLog timeLog) {
-    return ResponseEntity.ok(timeLogService.update(timeLog));
+  @PutMapping("/{id}")
+  public ResponseEntity<TimeLog> update(
+      @RequestBody @Validated TimeLogDto source,
+      @PathVariable Long id) {
+
+    TimeLog target = timeLogService.getSingle(id)
+        .map(t -> {
+          t.setUpdatedAt(LocalDate.now());
+          t.setTimeCountHours(source.getTimeCountHours());
+          return t;
+        })
+        .orElseThrow();
+
+    timeLogService.update(target);
+
+    return ResponseEntity.ok(target);
   }
 
   @GetMapping("/{id}")

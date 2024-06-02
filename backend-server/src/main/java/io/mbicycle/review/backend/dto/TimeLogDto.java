@@ -1,4 +1,8 @@
 package io.mbicycle.review.backend.dto;
 
-public record TimeLogDto(Long id, Long timeCountHours, UserDto user) {
+import lombok.Data;
+
+@Data
+public class TimeLogDto {
+  private Long timeCountHours;
 }
