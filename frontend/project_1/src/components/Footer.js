@@ -9,6 +9,9 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "16px 16px 0 0",
     boxShadow: "0 -4px 10px 0 rgba(0, 0, 0, 0.2)",
     padding: "32px",
+    position: "sticky",
+    bottom: 0,
+    width: "100%",
   },
   gridContainer: {
     justifyContent: "space-around",

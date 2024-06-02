@@ -2,7 +2,7 @@ import { setUsersAction, addUserAction, editUserAction, deleteUserAction } from 
 
 export const getUsers = () => async (dispatch) => {
   try {
-    const response = await fetch('http://localhost:8082/get/users');
+    const response = await fetch('http://localhost:8082/users');
     const data = await response.json();
     dispatch(setUsersAction(data));
   } catch (error) {
