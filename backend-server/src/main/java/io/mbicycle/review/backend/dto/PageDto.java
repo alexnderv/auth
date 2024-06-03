@@ -12,7 +12,7 @@ import org.springframework.data.domain.Sort;
 @NoArgsConstructor
 public class PageDto {
 
-  private List<UserSimpleDto> content;
+  private List<UserDto> content;
   private int totalPages;
   private int totalElements;
   private int size;
