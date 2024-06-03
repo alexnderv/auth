@@ -1,20 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import User from './User';
-import { connect } from 'react-redux';
-import { deleteUser, editUser } from '../Redux/actions';
+import axios from 'axios';
 
-function Users(props) {
+function Users() {
+  const [formData, setFormData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [loading, setLoading] = useState(true);
+
+  
+  useEffect(() => {
+    setLoading(true);
+    axios.get("http://localhost:8082/users", {
+      withCredentials: true
+    })
+    .then(response => {
+      console.log(response.data);
+      setFormData(response.data.content); // Обновите formData данными с сервера
+      setLoading(false);
+    })
+    .catch(error => {
+      console.error('Ошибка при получении данных пользователей:', error);
+      setLoading(false);
+    });
+  }, []); // Пустой массив зависимостей, чтобы запрос выполнялся один раз
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
   };
-
-  const filteredUsers = props.users.filter(
-    (user) =>
-      user.lastName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.firstName.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   return (
     <div>
@@ -24,14 +40,12 @@ function Users(props) {
         value={searchQuery}
         onChange={handleSearchChange}
       />
-      {filteredUsers.length > 0 ? (
-        filteredUsers.map((el) => (
-          <div key={el.id}>
-            <User onEdit={props.onEdit} onDelete={props.onDelete} user={el} />
-          </div>
+      {formData.length > 0 ? (
+        formData.map((user) => (
+          <User key={user.id} userData={user} />
         ))
       ) : (
-        <div className="user" style={{color: "rgb(41, 41, 41)", display: "flex", justifyContent: "center", alignCtems: "center" }}>
+        <div style={{ textAlign: 'center' }}>
           <h3>Пользователей нет</h3>
         </div>
       )}
@@ -39,13 +53,4 @@ function Users(props) {
   );
 }
 
-const mapStateToProps = (state) => ({
-  users: state.users,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  onDelete: (id) => dispatch(deleteUser(id)),
-  onEdit: (user) => dispatch(editUser(user)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Users);
+export default Users;

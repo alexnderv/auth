@@ -38,7 +38,7 @@ function UserAccaunt({ userData, onDelete }) {
 
         axios
         .get(
-            "http://localhost:8082/time-logs",
+            "http://localhost:8082/time-logs/some",
             {
                 withCredentials: true
             })
@@ -47,6 +47,18 @@ function UserAccaunt({ userData, onDelete }) {
           setFormData(response.data);
         })
         .catch(error => console.error('Ошибка при получении данных отработанных часов:', error));
+        
+        axios
+        .post(
+            "http://localhost:8082/time-logs",
+            {
+                withCredentials: true
+            })
+        .then(response => {
+          console.log(response);
+          setFormData(response.data);
+        })
+        .catch(error => console.error('Ошибка при добавлении данных отработанных часов:', error));
   }, []);
 
   const handleEditClick = () => {
@@ -126,7 +138,7 @@ function UserAccaunt({ userData, onDelete }) {
              <p><b><i>Отработанные часы:</i></b> {formData.timeCountHours}</p> 
              <form onSubmit={handleSubmit}>
       <TextField variant="standard" label="Отработанные часы" name="timeCountHours" value={formData.timeCountHours} onChange={handleChange}/>
-      <Button type="submit">Добавить</Button>
+      <Button onSubmit={handleSubmit} type="submit">Добавить</Button>
     </form>
 
               {submitSuccess ? <p>Данные успешно добавлены</p> : <p>Данные не добавлены</p>}

@@ -147,7 +147,8 @@ function Auth({ user }) {
   const classes = useStyles();
 
   return (
-    <form className={classes.form} onSubmit={handleSubmit}>
+    <div style={{width: "100%", height: "560px"}}>
+      <form className={classes.form} onSubmit={handleSubmit}>
       <div className={classes.label}>Авторизация</div>
 
       {errors.global && <div style={{ color: "red" }}>{errors.global}</div>}
@@ -176,6 +177,8 @@ function Auth({ user }) {
 
       <Button type="submit"  className={classes.button} >Вход</Button>
     </form>
+    </div>
+    
   );
 }
 

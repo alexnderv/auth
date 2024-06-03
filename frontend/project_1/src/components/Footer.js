@@ -2,6 +2,7 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
+import { useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
   footer: {
@@ -9,9 +10,8 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "16px 16px 0 0",
     boxShadow: "0 -4px 10px 0 rgba(0, 0, 0, 0.2)",
     padding: "32px",
-    position: "sticky",
     bottom: 0,
-    width: "100%",
+    marginTop: "25px",
   },
   gridContainer: {
     justifyContent: "space-around",
