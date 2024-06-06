@@ -50,6 +50,7 @@ function Auth({ user }) {
     if (!validateForm()) {
       return;
     }
+    
 
     // отправка запроса авторизации на сервер
     axios
@@ -70,8 +71,10 @@ function Auth({ user }) {
           // Проверка, является ли авторизованный пользователь администратором
           if (formData.username === 'admin@test.io') {
             // Перенаправление на страницу /users для администратора
+            alert('Вы успешно вошли как администатор!');
             window.location.href = '/users';
           } else {
+            alert('Вы успешно вошли как сотрудник!');
             // Перенаправление на страницу /user с ID пользователя
             window.location.href = '/userAccaunt';
           }

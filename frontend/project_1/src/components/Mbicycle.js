@@ -78,11 +78,10 @@ const Mbicycle = () => {
             <div className="mainTextMbicycle"
               elevation={3}>
               <Typography variant="h4" gutterBottom className="mainText">
-                Специалисты Mbicycle
+                О нас
               </Typography>
               <Typography variant="body1" className="secondaryText">
-                Энтузиасты аутсорсинга разработки программного обеспечения,
-                усердно работающие над созданием мощных программных решений.
+              ООО «МБайсикл» основано в октябре 2016 года в г. Гомеле. Фокус компании – заказная разработка ПО, создание MVPдля стартапов, высоконагруженные web-проекты, APIи разработка мобильных приложений для таких сфер как навигация, сельское хозяйство, спорт и других. Ключевые технологии - iOS, Android, Java, PHP и др.
               </Typography>
             </div>
           </Grid>

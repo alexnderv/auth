@@ -16,16 +16,15 @@ const theme = createTheme();
 function User({ userData, onDelete }) {
   const navigate = useNavigate();
   const [submitSuccess, setSubmitSuccess] = useState(false);
-  const matchesMobile = useMediaQuery(theme.breakpoints.down("xs"));
   const matchesDesktop = useMediaQuery(theme.breakpoints.down("md"));
 
-  const [formData, setFormData] = useState(null); // Set initial state to null
+  const [formData, setFormData] = useState({}); // Set initial state to null
 
   useEffect(() => {
     // Запрос данных пользователя с сервера
     axios
         .get(
-            "http://localhost:8082/users",
+            "http://localhost:8082/users?page=0&size=10",
             {
                 withCredentials: true
             })

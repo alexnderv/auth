@@ -14,19 +14,29 @@ import MenuItem from '@mui/material/MenuItem';
 import { useState } from 'react';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 
+
 function Header() {
+
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+  });
+
+  const [role, setRole] = React.useState(null);
   const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElNav2, setAnchorElNav2] = useState(null);
   const [activePath, setActivePath] = useState("/");
 
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
-  
-  const handleMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+  const [anchorEl2, setAnchorEl2] = React.useState(null);
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleClose2 = () => {
+    setAnchorEl2(null);
   };
 
 
@@ -39,8 +49,35 @@ function Header() {
     setAnchorElNav(event.currentTarget);
   };
 
+  const handleOpenNavMenu2 = (event) => {
+    setAnchorElNav2(event.currentTarget);
+  };
+
+  const handleMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+    // Проверьте, является ли пользователь администратором
+    if (formData.username === 'admin@test.io') {
+      setRole('admin');
+    } else {
+      setRole('user');
+    }
+  };
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClick2 = (event) => {
+    setAnchorEl2(event.currentTarget);
+  };
+
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
+  };
+  
+
+  const handleCloseNavMenu2 = () => {
+    setAnchorElNav2(null);
   };
 
   return (
@@ -111,13 +148,33 @@ function Header() {
                 flexDirection: "column",
                 flexWrap: "wrap",
               }}>
-                <Button component={Link} to="/users" color="inherit" textAlign="center"
-                disabled={activePath === "/users"}
-                onClick={() => handlePathChange("/users")}>
-                  Персонал
+                <Button component={Link} to="/projects" color="inherit"  disabled={activePath === "/projects"} onClick={() => handlePathChange("/projects")}
+                 sx={{
+                  "&.Mui-disabled": {
+                    color:"#e4e4e4",
+                  },}}>
+                  Проекты
                 </Button>
-                <Button component={Link} to="/add" color="inherit" textAlign="center" disabled={activePath === "/add"} onClick={() => handlePathChange("/add")}>
-                  Добавление персонала
+                <Button component={Link} to="/java-development" color="inherit" disabled={activePath === "/java-development"} onClick={() => handlePathChange("/java-development")}
+                  sx={{
+                    "&.Mui-disabled": {
+                      color:"#e4e4e4",
+                    },}}>
+                  Разработка Java
+                </Button>
+                <Button component={Link} to="/net-development" color="inherit" disabled={activePath === "/net-development"} onClick={() => handlePathChange("/net-development")}
+                  sx={{
+                    "&.Mui-disabled": {
+                      color:"#e4e4e4",
+                    },}}>
+                  Разработка .NET
+                </Button>
+                <Button component={Link} to="/flutter-development" color="inherit" disabled={activePath === "/flutter-development"} onClick={() => handlePathChange("/flutter-development")}
+                  sx={{
+                    "&.Mui-disabled": {
+                      color:"#e4e4e4",
+                    },}}>
+                  Разработка Flutter
                 </Button>
               </MenuItem>
             
@@ -142,6 +199,39 @@ function Header() {
             Mbicycle
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+          <Button component={Link} to="/projects" color="inherit"  disabled={activePath === "/projects"} onClick={() => handlePathChange("/users")}
+           sx={{
+            "&.Mui-disabled": {
+              color:"#e4e4e4",
+            },}}>
+              Проекты
+            </Button>
+            <div>
+              <Button  color="inherit" aria-controls="menu-appbar" aria-haspopup="true" onClick={handleClick2}>
+                Разработки 
+              </Button>
+              <Menu
+                id="menu-appbar"
+                anchorEl2={anchorEl2}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorEl2)}
+                onClose={handleClose2}
+              >
+                <MenuItem component={Link} to="/java-development" color="inherit" disabled={activePath === "/java-development"} onClick={() => {handlePathChange("/java-development"); handleClose()}}>Java</MenuItem>
+                <MenuItem component={Link} to="/net-development" color="inherit" disabled={activePath === "/net-development"} onClick={() => {handlePathChange("/java-development"); handleClose()}}>.NET</MenuItem>
+                <MenuItem component={Link} to="/flutter-development" color="inherit" disabled={activePath === "/flutter-development"} onClick={() => {handlePathChange("/java-development"); handleClose()}}>Flutter</MenuItem>
+              </Menu>
+            </div>
+          {auth && role === 'user' && (
+        <>
           <Button component={Link} to="/users" color="inherit"  disabled={activePath === "/users"} onClick={() => handlePathChange("/users")}
            sx={{
             "&.Mui-disabled": {
@@ -156,37 +246,52 @@ function Header() {
               },}}>
               Добавление персонала
             </Button>
+            </>
+            )}
+            {auth && role !== 'admin' && (
+            <Button component={Link} to="/userAccaunt" color="inherit" disabled={activePath === "/userAccaunt"} onClick={() => handlePathChange("/userAccaunt")}
+            sx={{
+              "&.Mui-disabled": {
+                color:"#e4e4e4",
+              },}}> Личный аккаунт </Button>
+            )}
           </Box>
           {auth && (
             <div>
-              <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenu}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-              >
-                <MenuItem component={Link} to="/auth" color="inherit" disabled={activePath === "/auth"} onClick={() => {handlePathChange("/auth"); handleClose()}}>Авторизоваться</MenuItem>
-              </Menu>
-            </div>
+            <IconButton
+              size="large"
+              aria-label="account of current user"
+              aria-controls="simple-menu"
+              aria-haspopup="true"
+              onClick={handleMenu}
+              color="inherit"
+            >
+              <AccountCircle />
+            </IconButton>
+            <Menu
+              id="simple-menu"
+              anchorEl={anchorEl}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+            >
+              <MenuItem component={Link} to="/auth" color="inherit" disabled={activePath === "/auth"} onClick={() => {handlePathChange("/auth"); handleClose()}}>Авторизоваться</MenuItem>
+              {auth && role === 'user' && (
+              <MenuItem component={Link} to="/userAccaunt" color="inherit" disabled={activePath === "/userAccaunt"} onClick={() => {handlePathChange("/userAccaunt"); handleClose()}}>Личный аккаунт</MenuItem>
+              )}
+              {auth && (
+              <MenuItem component={Link} to="/" color="inherit" disabled={activePath === "/index"} onClick={() => {auth.signOut(); handlePathChange("/index"); handleClose()}}>Выход</MenuItem>
+              )}
+            </Menu>
+          </div>
           )}
         </Toolbar>
       </Container>

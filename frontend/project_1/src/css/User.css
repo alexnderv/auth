@@ -19,9 +19,19 @@
   align-items: center;
   max-width: 65%;
   margin: 0px auto 20px auto;
+  font-size: 20px;
   border: 7px solid #ccc;
   padding: 20px;
   position: relative;
+}
+
+.user-salary-table{
+  text-align: center;
+  width: 100%;
+}
+
+.user-salary-table-td{
+  padding: 10px;
 }
 
 .search-container {

@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import AddUser from "./AddUser";
-import { connect } from "react-redux";
-import { editUser } from "../Redux/actions";
+import axios from 'axios';
 import { useLocation  } from "react-router";
 
-function EditUser({ onEdit, users }) {
+function EditUser({ users }) {
   
   const { state } = useLocation();
 
@@ -14,7 +13,16 @@ function EditUser({ onEdit, users }) {
   const [editedUser, setEditedUser] = useState({ ...user });
 
   const handleSaveEdit = () => {
-    onEdit(editedUser);
+    axios.put(`http://localhost:8082/users/${editedUser.id}`, editedUser, {
+      withCredentials: true
+    })
+    .then(response => {
+      console.log(response);
+      alert("Пользователь успешно обновлен!");
+      // Обновите состояние здесь, если это необходимо
+    })
+    .catch(error => console.error('Ошибка при редактировании пользователя:', error),
+    alert('Ошибка при редактировании пользователя!'));
   };
 
   const handleInputChange = (e) => {
@@ -34,12 +42,4 @@ function EditUser({ onEdit, users }) {
   );
 }
 
-const mapStateToProps = (state) => ({
-  users: state.users,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  onEdit: (user) => dispatch(editUser(user)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(EditUser);
+export default EditUser;

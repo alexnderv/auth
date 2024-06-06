@@ -19,7 +19,7 @@ function UserAccaunt({ userData, onDelete }) {
   const matchesMobile = useMediaQuery(theme.breakpoints.down("xs"));
   const matchesDesktop = useMediaQuery(theme.breakpoints.down("md"));
 
-  const [formData, setFormData] = useState(null); // Set initial state to null
+  const [formData, setFormData] = useState(null); 
 
   useEffect(() => {
     // Запрос данных пользователя с сервера
@@ -35,7 +35,7 @@ function UserAccaunt({ userData, onDelete }) {
         })
         .catch(error => console.error('Ошибка при получении данных пользователя:', error));
 
-
+// Запрос данных отработанных часов с сервера
         axios
         .get(
             "http://localhost:8082/time-logs/some",
@@ -47,10 +47,10 @@ function UserAccaunt({ userData, onDelete }) {
           setFormData(response.data);
         })
         .catch(error => console.error('Ошибка при получении данных отработанных часов:', error));
-        
+
         axios
-        .post(
-            "http://localhost:8082/time-logs",
+        .get(
+            "http://localhost:8082/statistics/salary",
             {
                 withCredentials: true
             })
@@ -58,7 +58,7 @@ function UserAccaunt({ userData, onDelete }) {
           console.log(response);
           setFormData(response.data);
         })
-        .catch(error => console.error('Ошибка при добавлении данных отработанных часов:', error));
+        .catch(error => console.error('Ошибка при получении заработной платы:', error));
   }, []);
 
   const handleEditClick = () => {
@@ -72,8 +72,8 @@ function UserAccaunt({ userData, onDelete }) {
   const handleSubmit = () => {
     // Проверяем, что введено значение отработанных часов
     if (formData && formData.timeCountHours) {
-      axios.post("http://localhost:8082/time-logs", formData, {
-        withCredentials: true
+      axios.post("http://localhost:8082/time-logs", formData, { 
+      withCredentials: true
       })
       .then(response => {
         console.log(response);
@@ -128,21 +128,28 @@ function UserAccaunt({ userData, onDelete }) {
             )}
               <div className="user-actions">
                 <IoHammerSharp onClick={handleEditClick} className="edit-icon" />
-                  <IoCloseCircleSharp onClick={() => onDelete(formData.id)} className="delete-icon" />
               </div>
             </div>
           </div>
           <div className="user-container-salary">
           {formData ? (
             <React.Fragment>
-             <p><b><i>Отработанные часы:</i></b> {formData.timeCountHours}</p> 
-             <form onSubmit={handleSubmit}>
-      <TextField variant="standard" label="Отработанные часы" name="timeCountHours" value={formData.timeCountHours} onChange={handleChange}/>
-      <Button onSubmit={handleSubmit} type="submit">Добавить</Button>
-    </form>
-
-              {submitSuccess ? <p>Данные успешно добавлены</p> : <p>Данные не добавлены</p>}
-          
+             <table className="user-salary-table">
+              <tr >
+                <td className="user-salary-table-td"><p><b><i>Отработанные часы: </i></b> {formData.timeCountHours}</p></td>
+                <td className="user-salary-table-td">
+                  <form onSubmit={handleSubmit}>
+                    <TextField variant="standard" label="Отработанные часы" name="timeCountHours" value={formData.timeCountHours} onChange={handleChange}/>
+                  </form>
+                </td>
+              </tr>
+              <tr >
+                <td className="user-salary-table-td"><p><b><i>Заработанная плата: </i></b> {formData.salary}</p></td>
+                <td className="user-salary-table-td">
+                  <Button onСlick={handleSubmit} type="submit">Добавить</Button>
+                </td>
+              </tr>
+            </table>
             </React.Fragment>
             ) : (
               <p>Loading...</p> // Display a loading message while formData is being fetched

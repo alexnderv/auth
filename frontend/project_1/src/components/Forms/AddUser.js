@@ -7,6 +7,7 @@ import { useNavigate  } from "react-router";
 import { IconButton } from "@mui/material";
 import { addUser, editUser } from "../Redux/actions";
 import { VisibilityOff, Visibility } from "@material-ui/icons";
+import axios from 'axios';
 
 function AddUser({ user, onAdd, onEdit }) {
   const navigate = useNavigate();
@@ -19,8 +20,8 @@ function AddUser({ user, onAdd, onEdit }) {
 
   const [formData, setFormData] = useState({
     username: "",
+    email:"",
     password:"",
-    role: "",
     rate: 0,
     photo: "",
     age: 1,
@@ -32,15 +33,15 @@ function AddUser({ user, onAdd, onEdit }) {
   });
 
   const [errors, setErrors] = useState({});
-  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
+      email: name === 'username' ? value : prevData.email, // обновите email при изменении username
     }));
-
+  
     // Очищаем ошибку при изменении значения поля
     setErrors((prevErrors) => ({
       ...prevErrors,
@@ -82,12 +83,29 @@ function AddUser({ user, onAdd, onEdit }) {
       const userAdd = { ...formData };
       if (user && user.id) {
         userAdd.id = user.id;
-        onEdit(userAdd);
+        axios.post(`http://localhost:8082/users/${user.id}`, userAdd, {
+          withCredentials: true
+        })
+        .then(response => {
+          console.log(response);
+          // Обновите состояние здесь, если это необходимо
+        })
+        .catch(error => console.error('Ошибка при редактировании пользователя:', error));
       } else {
-        onAdd(userAdd);
+        axios.post('http://localhost:8082/users/register', userAdd, {
+          withCredentials: true
+        })
+        .then(response => {
+          console.log(response);
+          alert("Пользователь успешно добавлен!");
+          // Обновите состояние здесь, если это необходимо
+        })
+        .catch(error => console.error('Ошибка при добавлении пользователя:', error),
+        alert('Ошибка при добавлении пользователя!'));
       }
       setFormData({
         username: "",
+        email:"",
         firstname: "",
         lastname:"",
         phoneNumbers: "",
@@ -179,7 +197,7 @@ function AddUser({ user, onAdd, onEdit }) {
       <TextField className={classes.input} variant="standard" label="Фамилия" name="lastname" value={formData.lastname} onChange={handleChange}/>
       <TextField className={classes.input} variant="standard" label="Логин" name="username" value={formData.username} onChange={handleChange}/>
       <TextField className={classes.input} variant="standard" label="Пароль" name="password" value={formData.password} onChange={handleChange}  type="password"/>
-      <TextField className={classes.input} variant="standard" label="Роль" name="role" value={formData.role} onChange={handleChange}/>
+      <TextField className={classes.input} variant="standard" label="Номер телефона" name="phoneNumbers" value={formData.phoneNumbers} onChange={handleChange}/>
       <TextField className={classes.input} variant="standard" label="Ставка" name="rate" value={formData.rate} onChange={handleChange}/>
       <TextField className={classes.input} variant="standard" label="Возраст" name="age" value={formData.age} onChange={handleChange} />
       <TextField className={classes.input} variant="standard" label="Должность" name="job" value={formData.job} onChange={handleChange}/>
