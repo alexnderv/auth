@@ -22,6 +22,10 @@ public class UserService implements UserDetailsService {
 
   @Transactional
   public User register(User source) {
+    source.setEnabled(true);
+    source.setExpired(false);
+    source.setCredentialsExpired(false);
+    source.setLocked(false);
     return dao.save(source);
   }
 

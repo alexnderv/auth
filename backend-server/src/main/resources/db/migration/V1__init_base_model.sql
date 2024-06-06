@@ -1,4 +1,4 @@
-create sequence auth_user_id_seq start with 2 increment by 1;
+create sequence auth_user_id_seq start with 10 increment by 1;
 create sequence time_log_id_seq start with 2 increment by 1;
 
 create table auth_user
