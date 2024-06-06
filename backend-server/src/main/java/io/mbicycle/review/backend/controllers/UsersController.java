@@ -79,7 +79,7 @@ public class UsersController {
   private Long defaultUserId;
 
   @PostMapping("/register")
-  @RolesAllowed("ADMIN")
+  // @RolesAllowed("ADMIN")
   public ResponseEntity<UserDto> create(@RequestBody @Validated(UserDto.CreateUser.class) UserDto dto) {
     User registered = userService.register(mapper.map(dto, User.class));
     return ResponseEntity.ok(mapper.map(registered, UserDto.class));
