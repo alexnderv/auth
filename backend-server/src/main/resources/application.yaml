@@ -5,6 +5,8 @@ spring:
     password: 111
   jpa:
     show-sql: true
+  jackson:
+    default-property-inclusion: non_null
 
 springdoc:
   show-oauth2-endpoints: true

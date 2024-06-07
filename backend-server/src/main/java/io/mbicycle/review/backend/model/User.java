@@ -50,7 +50,7 @@ public class User implements UserDetails {
   private String country;
   private String city;
   private String quote;
-  private String role;
+  private String careerRole;
 
   @ElementCollection
   @CollectionTable(name = "phone_number", joinColumns = @JoinColumn(name = "user_id"))

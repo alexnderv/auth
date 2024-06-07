@@ -25,29 +25,9 @@ const [timeLogDataAdd, setTimeLogDataAdd] = useState(null);
 const [salaryData, setSalaryData] = useState(null);
 
 useEffect(() => {
-  axios
-    .get("http://localhost:8082/users/me", { withCredentials: true })
-    .then(response => {
-      console.log(response);
-      setFormData(response.data);
-    })
-    .catch(error => console.error('Ошибка при получении данных пользователя:', error));
-
-  axios
-    .get("http://localhost:8082/time-logs/some", { withCredentials: true })
-    .then(response => {
-      console.log(response);
-      setTimeLogData(response.data);
-    })
-    .catch(error => console.error('Ошибка при получении данных отработанных часов:', error));
-
-  axios
-    .get("http://localhost:8082/statistics/salary", { withCredentials: true })
-    .then(response => {
-      console.log(response);
-      setSalaryData(response.data);
-    })
-    .catch(error => console.error('Ошибка при получении заработной платы:', error));
+    fetchMe()
+    fetchTimelogs()
+    fetchSalary();
 }, []);
 
   const handleEditClick = () => {
@@ -59,15 +39,19 @@ useEffect(() => {
   const [errors, setErrors] = useState({});
 
   const handleSubmit = () => {
-    console.log(timeLogDataAdd);
-    // Проверяем, что введено значение отработанных часов
-    console.log("working2");
-      axios.post("http://localhost:8082/time-logs", timeLogDataAdd, { 
-      withCredentials: true
-      })
+      axios.post("http://localhost:8082/time-logs",
+          timeLogDataAdd,
+          {
+              withCredentials: true,
+              headers: {
+                  'Content-Type': 'application/json',
+              }
+          })
       .then(response => {
         console.log(response);
         setTimeLogDataAdd(response.data);
+        fetchSalary();
+        fetchTimelogs()
         // Устанавливаем состояние успешности операции в true
         setSubmitSuccess(true);
       })
@@ -75,83 +59,129 @@ useEffect(() => {
         console.error('Ошибка при добавлении данных отработанных часов:', error);
         setSubmitSuccess(false);
       });
-    
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-    setErrors((prevErrors) => ({
-      ...prevErrors,
-      [name]: "",
-    }));
-    // Сбрасываем состояние успешности при изменении данных
-    setSubmitSuccess(false);
-  };
+  const fetchSalary = () => {
+      axios
+          .get("http://localhost:8082/statistics/salary", { withCredentials: true })
+          .then(response => {
+              console.log(response);
+              setSalaryData(response.data);
+          })
+          .catch(error => console.error('Ошибка при получении заработной платы:', error));
+  }
+
+  const fetchTimelogs = () => {
+      axios
+          .get("http://localhost:8082/time-logs/some", { withCredentials: true })
+          .then(response => {
+              console.log(response);
+              setTimeLogData(response.data);
+          })
+          .catch(error => console.error('Ошибка при получении данных отработанных часов:', error));
+  }
+
+  const fetchMe = () => {
+      axios
+          .get("http://localhost:8082/users/me", { withCredentials: true })
+          .then(response => {
+              console.log(response);
+              setFormData(response.data);
+          })
+          .catch(error => console.error('Ошибка при получении данных пользователя:', error));
+  }
+
+  const handleTimelogChange = (e) => {
+      const { name, value } = e.target;
+      setTimeLogDataAdd((prevData) => ({
+          ...prevData,
+          [name]: value,
+      }));
+      setErrors((prevErrors) => ({
+          ...prevErrors,
+          [name]: "",
+      }));
+      // Сбрасываем состояние успешности при изменении данных
+      setSubmitSuccess(false);
+  }
 
   return (
     <Grid item xs={1} sm={matchesDesktop ? 12 : 12} >
       <div>
           <div className="user-container">
-            <div className="user-image">
-            {formData && formData.photo && (
-              <img id="img" src={formData.photo} alt={`${formData.firstName} ${formData.lastName}`} />
-            )}
-            </div>
-            <div className="user-details">
-            {formData ? ( // Check if formData is not null
-              <React.Fragment>
-              <h3>{formData.firstName} {formData.lastName}, {formData.age} лет</h3>
-              <p style={{color: "grey", marginBottom: "20px" }}>{formData.job}</p>
-              <p><b><i>Почта:</i></b> {formData.email}</p>
-              <p><b><i>Телефон:</i></b> {formData.phoneNumbers}</p>
-              <p><b><i>Ставка:</i></b> {formData.rate}</p>
-              <p><b><i>БИО:</i></b> {formData.bio}</p>
-              <p style={{marginTop: "5px" }}><i><b>Цитата:</b></i> {formData.quote}</p>
-              <p style={{marginTop: "20px" }}><i>{formData.country}, {formData.city}</i></p>
-              </React.Fragment>
-            ) : (
-              <p>Loading...</p> // Display a loading message while formData is being fetched
-            )}
-              <div className="user-actions">
+              <div className="user-image">
+                  {formData && formData.photo && (
+                      <img id="img" src={formData.photo} alt={`${formData.firstName} ${formData.lastName}`}/>
+                  )}
+              </div>
+              <div className="user-details">
+                  {
+                      formData
+                          ? ( // Check if formData is not null
+                              <React.Fragment>
+                                  <h3>{formData.firstName} {formData.lastName}, {formData.age} лет</h3>
+                                  <p style={{color: "grey", marginBottom: "20px"}}>{formData.job}</p>
+                                  <p><b><i>Почта:</i></b> {formData.email}</p>
+                                  <p><b><i>Телефон:</i></b> {formData.phoneNumbers}</p>
+                                  <p><b><i>Ставка:</i></b> {formData.rate}</p>
+                                  <p><b><i>БИО:</i></b> {formData.bio}</p>
+                                  <p style={{marginTop: "5px"}}><i><b>Цитата:</b></i> {formData.quote}</p>
+                                  <p style={{marginTop: "20px"}}><i>{formData.country}, {formData.city}</i></p>
+                              </React.Fragment>
+                          )
+                          : ( <p>Loading...</p> )
+                  }
+                  <div className="user-actions">
                 <IoHammerSharp onClick={handleEditClick} className="edit-icon" />
               </div>
             </div>
           </div>
+
           <div className="user-container-salary">
-             <table className="user-salary-table">
-             {timeLogData ? ( 
-              <React.Fragment>
-                <td className="user-salary-table-td"><p><b><i>Отработанные часы: </i></b> {timeLogData.timeCountHours}</p></td>
-              </React.Fragment>
-              ) : (
-                <p>Loading...</p> // Display a loading message while formData is being fetched
-              )}
-                <td className="user-salary-table-td">
-                {timeLogDataAdd ? ( 
-              <React.Fragment>
-                <form onSubmit={handleSubmit}>
-                    <TextField variant="standard" label="Отработанные часы" name="timeCountHours" value={timeLogDataAdd.timeCountHours} onChange={handleChange}/>
-                </form>
-                </React.Fragment>
-              ) : (
-                <p>Loading...</p> // Display a loading message while formData is being fetched
-              )}
-                </td>
-                {salaryData ? ( 
-              <React.Fragment>
-                <td className="user-salary-table-td"><p><b><i>Заработанная плата: </i></b> {salaryData.salary}</p></td>
-                <td className="user-salary-table-td">
-                  <Button onClick={handleSubmit} type="submit">Добавить</Button>
-                </td>
-              </React.Fragment>
-                ) : (
-                  <p>Loading...</p> // Display a loading message while formData is being fetched
-                )}
-            </table>
+              <table className="user-salary-table">
+                  <tbody>
+                  <tr>
+                      {
+                          timeLogData
+                              ? (
+                                  <React.Fragment>
+                                      <td className="user-salary-table-td"><p><b><i>Отработанные часы: </i></b> {timeLogData.timeCountHours}</p></td>
+                                  </React.Fragment>
+                              )
+                              : (<p>Loading...</p>)
+                      }
+                  </tr>
+                  <tr>
+                      <td className="user-salary-table-td">
+                          <React.Fragment>
+                              <TextField
+                                  variant="standard"
+                                  type="number"
+                                  label="Отработанные часы"
+                                  name="timeCountHours"
+                                  onChange={e => handleTimelogChange(e)}
+                              />
+                              <Button
+                                  onClick={handleSubmit}
+                                  variant="contained">
+                                  submit
+                              </Button>
+                          </React.Fragment>
+                      </td>
+                  </tr>
+                  <tr>
+
+                      {
+                          salaryData
+                              ? (
+                                  <React.Fragment>
+                                      <p><b><i>Заработанная плата: </i></b> {salaryData.salary}</p>
+                                  </React.Fragment>)
+                              : (<p>Loading...</p>)
+                      }
+                  </tr>
+                  </tbody>
+              </table>
           </div>
       </div>
     </Grid>

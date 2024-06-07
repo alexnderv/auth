@@ -1,5 +1,6 @@
 package io.mbicycle.review.backend.services;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,12 +27,17 @@ public class UserService implements UserDetailsService {
     source.setExpired(false);
     source.setCredentialsExpired(false);
     source.setLocked(false);
+    source.setAuthorities(Collections.singleton(UserRole.USER));
     return dao.save(source);
   }
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     return dao.findByUsername(username)
+        .map(u -> {
+          u.setAuthorities(Collections.singleton(UserRole.valueOf(u.getCareerRole())));
+          return u;
+        })
         .orElseThrow();
   }
 

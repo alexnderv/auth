@@ -57,7 +57,7 @@ public class UsersController {
     mapper.createTypeMap(User.class, UserDto.class)
         .addMappings(m -> m.using(toUpperCaseFirstLetter).map(User::getFirstName, UserDto::setFirstName))
         .addMappings(m -> m.using(toUpperCaseFirstLetter).map(User::getLastName, UserDto::setLastName))
-        .addMappings(m -> m.map(User::getPassword, (userDto, o) -> userDto.setPassword(null)));
+        .addMappings(m -> m.using(ctx -> null).map(User::getPassword, UserDto::setPassword));
 
     Converter<String, String> toLowerCaseFirstLetter = ctx -> {
       String source = ctx.getSource();

@@ -17,7 +17,7 @@ create table auth_user
     city                varchar,
     quote               text,
     rate                bigint,
-    role                varchar,
+    career_role          varchar,
 
     enabled             boolean      not null default true,
     expired             boolean      not null default false,

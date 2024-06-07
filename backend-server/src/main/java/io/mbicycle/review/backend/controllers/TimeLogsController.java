@@ -40,8 +40,7 @@ public class TimeLogsController {
   private final ModelMapper mapper;
 
   @PostMapping
-  public ResponseEntity<TimeLog> create(
-      @RequestBody @Validated TimeLogDto source) {
+  public ResponseEntity<TimeLog> create(@RequestBody @Validated TimeLogDto source) {
 
     User authenticatedUser = ofNullable(SecurityContextHolder.getContext())
         .map(SecurityContext::getAuthentication)
