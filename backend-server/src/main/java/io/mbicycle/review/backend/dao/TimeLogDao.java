@@ -23,4 +23,11 @@ public interface TimeLogDao extends JpaRepository<TimeLog, Long> {
       + "WHERE u.id = :userId AND t.updatedAt BETWEEN :startDate AND :endDate")
   List<BigDecimal> getUserSalary(Long userId, LocalDate startDate, LocalDate endDate);
 
+
+  @Query("SELECT t.timeCountHours "
+      + "FROM TimeLog t "
+      + "JOIN t.user u "
+      + "WHERE u.id = :userId AND t.updatedAt BETWEEN :startDate AND :endDate")
+  List<Integer> getHoursByUserId(Long userId, LocalDate startDate, LocalDate endDate);
+
 }

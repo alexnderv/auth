@@ -82,8 +82,7 @@ public class TimeLogsController {
   }
 
   @GetMapping("/all")
-  // fixme doesn't work
-  // @RolesAllowed("ADMIN")
+  @RolesAllowed("ADMIN")
   public ResponseEntity<Page<TimeLogDto>> getAll(Pageable pageable) {
     Page<TimeLog> source = timeLogService.getPage(pageable);
     var typeToken = new TypeToken<Page<TimeLogDto>>() { };

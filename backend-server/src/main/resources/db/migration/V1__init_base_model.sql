@@ -17,7 +17,8 @@ create table auth_user
     city                varchar,
     quote               text,
     rate                bigint,
-    career_role          varchar,
+    career_role         varchar,
+    phone_number        varchar,
 
     enabled             boolean      not null default true,
     expired             boolean      not null default false,
@@ -33,14 +34,6 @@ create table user_role
     role    varchar(255) not null,
 
     constraint fk_role_user_id foreign key (user_id) references auth_user (id)
-);
-
-create table phone_number
-(
-    number  varchar(100) not null,
-    user_id bigint       not null,
-
-    constraint fk_number_user foreign key (user_id) references auth_user (id)
 );
 
 create table time_log

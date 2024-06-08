@@ -9,11 +9,11 @@ import io.mbicycle.review.backend.dto.UserDto;
 import io.mbicycle.review.backend.dto.UserSimpleDto;
 import io.mbicycle.review.backend.model.User;
 import io.mbicycle.review.backend.services.Sender;
+import io.mbicycle.review.backend.services.TimeLogService;
 import io.mbicycle.review.backend.services.UserService;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.security.RolesAllowed;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -22,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -45,6 +46,7 @@ public class UsersController {
   private final Sender sender;
   private final ModelMapper mapper;
   private final PasswordEncoder passwordEncoder;
+  private final TimeLogService timeLogService;
 
   @PostConstruct
   public void registerUserMappings() {
@@ -57,7 +59,9 @@ public class UsersController {
     mapper.createTypeMap(User.class, UserDto.class)
         .addMappings(m -> m.using(toUpperCaseFirstLetter).map(User::getFirstName, UserDto::setFirstName))
         .addMappings(m -> m.using(toUpperCaseFirstLetter).map(User::getLastName, UserDto::setLastName))
-        .addMappings(m -> m.using(ctx -> null).map(User::getPassword, UserDto::setPassword));
+        .addMappings(m -> m.using(ctx -> null).map(User::getPassword, UserDto::setPassword))
+        .addMappings(m -> m.using(ctx -> timeLogService.getUserHoursThisMonth((Long) ctx.getSource())).map(User::getId, UserDto::setTimeCountHours))
+        .addMappings(m -> m.using(ctx -> timeLogService.calculateSalaryThisMonth((Long) ctx.getSource())).map(User::getId, UserDto::setSalary));
 
     Converter<String, String> toLowerCaseFirstLetter = ctx -> {
       String source = ctx.getSource();
@@ -79,23 +83,21 @@ public class UsersController {
   private Long defaultUserId;
 
   @PostMapping("/register")
-  // @RolesAllowed("ADMIN")
+  @RolesAllowed("ADMIN")
   public ResponseEntity<UserDto> create(@RequestBody @Validated(UserDto.CreateUser.class) UserDto dto) {
     User registered = userService.register(mapper.map(dto, User.class));
     return ResponseEntity.ok(mapper.map(registered, UserDto.class));
   }
 
   @GetMapping
-  // fixme doesn't work
-  // @RolesAllowed("ADMIN")
+  @RolesAllowed("ADMIN")
   public ResponseEntity<PageDto> getPage(Pageable pageRequest) {
     Page<User> users = userService.getPage(pageRequest);
     return ResponseEntity.ok(mapper.map(users, PageDto.class));
   }
 
   @RequestMapping("/search")
-  // fixme doesn't work
-  // @RolesAllowed("ADMIN")
+  @RolesAllowed("ADMIN")
   public ResponseEntity<List<UserSimpleDto>> getPage(@RequestParam("query") String query) {
     List<User> users = userService.queryUsers(query);
     TypeToken<List<UserSimpleDto>> typeToken = new TypeToken<>() {
@@ -120,8 +122,7 @@ public class UsersController {
   }
 
   @GetMapping("{id}")
-  // fixme doesn't work
-  // @RolesAllowed("ADMIN")
+  @RolesAllowed("ADMIN")
   public ResponseEntity<UserDto> getUser(@PathVariable Long id) {
     return userService.getSingle(id)
         .map(u -> mapper.map(u, UserDto.class))
@@ -153,8 +154,7 @@ public class UsersController {
   }
 
   @DeleteMapping("{id}")
-  // fixme doesn't work
-  // @RolesAllowed("ADMIN")
+  @RolesAllowed("ADMIN")
   public ResponseEntity<Void> delete(@PathVariable Long id) {
     // todo check if current user is not admin
     userService.getSingle(id)
@@ -173,8 +173,7 @@ public class UsersController {
   }
 
   @DeleteMapping
-  // fixme doesn't work
-  // @RolesAllowed("ADMIN")
+  @RolesAllowed("ADMIN")
   public ResponseEntity<Integer> deleteSome(@RequestBody List<Long> ids) {
     // fixme check if there is an error while getting by wrong id
     List<User> toDelete = userService.getSomeById(ids);

@@ -13,13 +13,11 @@ import org.springframework.stereotype.Repository;
 public interface UserDao extends JpaRepository<User, Long> {
 
   @Query("SELECT u FROM User u "
-      + "LEFT JOIN FETCH u.phoneNumbers "
       + "LEFT JOIN FETCH u.authorities "
       + "WHERE u.email = :email")
   Optional<User> findByEmail(String email);
 
   @Query("SELECT u FROM User u "
-      + "LEFT JOIN FETCH u.phoneNumbers "
       + "LEFT JOIN FETCH u.authorities "
       + "WHERE u.username = :username")
   Optional<User> findByUsername(String username);

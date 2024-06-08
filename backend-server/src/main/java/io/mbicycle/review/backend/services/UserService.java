@@ -27,17 +27,13 @@ public class UserService implements UserDetailsService {
     source.setExpired(false);
     source.setCredentialsExpired(false);
     source.setLocked(false);
-    source.setAuthorities(Collections.singleton(UserRole.USER));
+    source.setAuthorities(Collections.singleton(UserRole.ROLE_USER));
     return dao.save(source);
   }
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     return dao.findByUsername(username)
-        .map(u -> {
-          u.setAuthorities(Collections.singleton(UserRole.valueOf(u.getCareerRole())));
-          return u;
-        })
         .orElseThrow();
   }
 

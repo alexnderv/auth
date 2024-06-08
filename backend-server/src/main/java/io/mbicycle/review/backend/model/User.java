@@ -1,8 +1,6 @@
 package io.mbicycle.review.backend.model;
 
 import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 import io.mbicycle.review.backend.services.UserRole;
@@ -22,7 +20,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
@@ -50,12 +47,8 @@ public class User implements UserDetails {
   private String country;
   private String city;
   private String quote;
-  private String careerRole;
 
-  @ElementCollection
-  @CollectionTable(name = "phone_number", joinColumns = @JoinColumn(name = "user_id"))
-  @Column(name = "number")
-  private List<String> phoneNumbers;
+  private String phoneNumber;
 
   private Boolean enabled;
   private Boolean expired;

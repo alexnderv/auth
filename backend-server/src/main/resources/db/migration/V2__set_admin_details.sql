@@ -1,2 +1,2 @@
-insert into auth_user values (1, 'admin@test.io', 'admin@test.io', '$2a$10$ENi6w/4WODK31hmHiaRuNOmRcFTWRW6agB9snk/KgjNfwPb3Gk0bC', 'Лштшфум', 'Ащьф', 'https://content.onliner.by/news/820x5616/e444f664f74b0059d2808e8b6913f317.jpg', 22, 'admin', 'some bio text', 'Belarus', 'Gomel', 'test quote', 22, 'ADMIN');
-insert into phone_number values ('223322223', 1);
+insert into auth_user values (1, 'admin@test.io', 'admin@test.io', '$2a$10$ENi6w/4WODK31hmHiaRuNOmRcFTWRW6agB9snk/KgjNfwPb3Gk0bC', 'Лштшфум', 'Ащьф', 'https://content.onliner.by/news/820x5616/e444f664f74b0059d2808e8b6913f317.jpg', 22, 'admin', 'some bio text', 'Belarus', 'Gomel', 'test quote', 22, '223322223');
+insert into user_role values (1, 'ROLE_ADMIN');

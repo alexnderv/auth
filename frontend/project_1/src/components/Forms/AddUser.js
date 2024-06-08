@@ -16,9 +16,6 @@ function AddUser({ user }) {
   const [formDataAddUser, setFormDataAddUser] = useState({
     username: "",
     email:"",
-    firstname: "",
-    lastname:"",
-    phoneNumbers: [""],
     password:"",
     rate: 0,
     photo: "",
@@ -28,6 +25,9 @@ function AddUser({ user }) {
     country: "",
     city: "",
     quote: "",
+    phoneNumber: "",
+    firstName: "",
+    lastName:""
   });
 
   useEffect(() => {
@@ -106,31 +106,25 @@ function AddUser({ user }) {
       } else {
         axios.post('http://localhost:8082/users/register', userAdd, config)
         .then(response => {
-          console.log(response);
-          setFormDataAddUser({
-            username: "",
-            email:"",
-            firstname: "",
-            lastname:"",
-            phoneNumbers: [""],
-            password:"",
-            rate: 0,
-            photo: "",
-            age: 1,
-            job: "",
-            bio: "",
-            country: "",
-            city: "",
-            quote: "",
-          }); // Очищаем форму
-          alert("Пользователь успешно добавлен!");
+            setFormDataAddUser({
+                username: "",
+                email:"",
+                firstName: "",
+                lastName:"",
+                phoneNumber: "",
+                password:"",
+                rate: 0,
+                photo: "",
+                age: 1,
+                job: "",
+                bio: "",
+                country: "",
+                city: "",
+                quote: "",
+            });
         })
-        .catch(error => {
-          console.error('Ошибка при добавлении пользователя:', error);
-          alert('Ошибка при добавлении пользователя!');
-        });
+        .catch(error => console.error('Ошибка при добавлении пользователя:', error));
       }
-      navigate("/users");
     }
   };
 
@@ -204,12 +198,12 @@ function AddUser({ user }) {
       {Object.keys(formDataAddUser).map((key) => (
         errors[key] && key !== 'global' && <div key={key} style={{ color: "red" }}>{errors[key]}</div>
       ))}
-      <TextField className={classes.input} variant="standard" label="Имя" name="firstname" value={formDataAddUser.firstname} onChange={handleChange}/>
-      <TextField className={classes.input} variant="standard" label="Фамилия" name="lastname" value={formDataAddUser.lastname} onChange={handleChange}/>
+      <TextField className={classes.input} variant="standard" label="Имя" name="firstName" value={formDataAddUser.firstName} onChange={handleChange}/>
+      <TextField className={classes.input} variant="standard" label="Фамилия" name="lastName" value={formDataAddUser.lastName} onChange={handleChange}/>
       <TextField className={classes.input} variant="standard" label="Логин" name="username" value={formDataAddUser.username} onChange={handleChange}/>
       <TextField className={classes.input} variant="standard" label="Почта" name="email" value={formDataAddUser.email} onChange={handleChange}/>
       <TextField className={classes.input} variant="standard" label="Пароль" name="password" value={formDataAddUser.password} onChange={handleChange}  type="password"/>
-      <TextField className={classes.input} variant="standard" label="Номер телефона" name="phoneNumbers" value={formDataAddUser.phoneNumbers} onChange={handleChange}/>
+      <TextField className={classes.input} variant="standard" label="Номер телефона" name="phoneNumber" value={formDataAddUser.phoneNumber} onChange={handleChange}/>
       <TextField className={classes.input} variant="standard" label="Ставка" name="rate" value={formDataAddUser.rate} onChange={handleChange}/>
       <TextField className={classes.input} variant="standard" label="Возраст" name="age" value={formDataAddUser.age} onChange={handleChange} />
       <TextField className={classes.input} variant="standard" label="Должность" name="job" value={formDataAddUser.job} onChange={handleChange}/>

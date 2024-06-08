@@ -3,6 +3,7 @@ package io.mbicycle.review.backend.controllers;
 import static java.util.Optional.ofNullable;
 
 import io.mbicycle.review.backend.dto.SalaryStatisticsDto;
+import io.mbicycle.review.backend.model.User;
 import io.mbicycle.review.backend.services.TimeLogService;
 import io.mbicycle.review.backend.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,7 @@ public class StatisticsController {
         .map(SecurityContext::getAuthentication)
         .map(Authentication::getName)
         .flatMap(this.userService::getSingleByUsername)
+        .map(User::getId)
         .map(timeLogService::calculateSalaryThisMonth)
         .map(SalaryStatisticsDto::new)
         .orElseThrow(() -> new RuntimeException("Cannot find an authenticated user"));

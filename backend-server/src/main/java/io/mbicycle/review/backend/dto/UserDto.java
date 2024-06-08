@@ -2,6 +2,7 @@ package io.mbicycle.review.backend.dto;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -32,8 +33,7 @@ public class UserDto {
   @NotBlank(message = "The last name is required", groups = CreateUser.class)
   @Length(min = 1, max = 100, message = "The last name must be between 1 and 100 length", groups = { CreateUser.class, UpdateUser.class })
   private String lastName;
-  @Size(max = 20, groups = { CreateUser.class, UpdateUser.class })
-  private List<String> phoneNumbers;
+  private String phoneNumber;
 
   private BigDecimal rate;
   private String photo;
@@ -43,6 +43,11 @@ public class UserDto {
   private String country;
   private String city;
   private String quote;
+
+  private BigDecimal salary;
+  private Integer timeCountHours;
+
+  private Set<String> authorities;
 
   public interface CreateUser {
 

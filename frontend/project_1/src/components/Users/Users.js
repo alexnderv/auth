@@ -145,20 +145,22 @@ const handleTimelogChange = (e) => {
               )}
               </div>
               <div className="user-details">
-              {user ? ( // Check if formData is not null
-                <React.Fragment>
-                <h3>{user.firstName} {user.lastName}, {user.age} лет</h3>
-                <p style={{color: "grey", marginBottom: "20px" }}>{user.job}</p>
-                <p><b><i>Почта:</i></b> {user.email}</p>
-                <p><b><i>Телефон:</i></b> {user.phoneNumbers}</p>
-                <p><b><i>Ставка:</i></b> {user.rate}</p>
-                <p><b><i>БИО:</i></b> {user.bio}</p>
-                <p style={{marginTop: "5px" }}><i><b>Цитата:</b></i> {user.quote}</p>
-                <p style={{marginTop: "20px" }}><i>{user.country}, {user.city}</i></p>
-                </React.Fragment>
-              ) : (
-                <p>Loading...</p> // Display a loading message while formData is being fetched
-              )}
+                {
+                  user
+                      ? ( // Check if formData is not null
+                          <React.Fragment>
+                            <h3>{user.firstName} {user.lastName}, {user.age} лет</h3>
+                            <p style={{color: "grey", marginBottom: "20px"}}>{user.job}</p>
+                            <p><b><i>Почта:</i></b> {user.email}</p>
+                            <p><b><i>Телефон:</i></b> {user.phoneNumbers}</p>
+                            <p><b><i>Ставка:</i></b> {user.rate}</p>
+                            <p><b><i>БИО:</i></b> {user.bio}</p>
+                            <p style={{marginTop: "5px"}}><i><b>Цитата:</b></i> {user.quote}</p>
+                            <p style={{marginTop: "20px"}}><i>{user.country}, {user.city}</i></p>
+                          </React.Fragment>
+                      )
+                      : (<p>Loading...</p>)
+                }
                 <div className="user-actions">
                   <IoHammerSharp onClick={handleEditClick} className="edit-icon" />
                     <IoCloseCircleSharp onClick={handleDeleteClick} className="delete-icon" />

@@ -52,15 +52,28 @@ public class TimeLogService {
     dao.deleteAll(toDelete);
   }
 
-  public BigDecimal calculateSalaryThisMonth(User user) {
+  public BigDecimal calculateSalaryThisMonth(Long userId) {
 
     LocalDate now = LocalDate.now().withDayOfMonth(1);
 
     return dao.getUserSalary(
-            user.getId(),
+            userId,
             now.withDayOfMonth(1),
             now.withDayOfMonth(now.lengthOfMonth()))
         .stream()
         .reduce(BigDecimal.ZERO, BigDecimal::add);
   }
+
+  public Integer getUserHoursThisMonth(Long userId) {
+
+    LocalDate now = LocalDate.now().withDayOfMonth(1);
+
+    return dao.getHoursByUserId(
+            userId,
+            now.withDayOfMonth(1),
+            now.withDayOfMonth(now.lengthOfMonth()))
+        .stream()
+        .reduce(0, Integer::sum);
+  }
+
 }
