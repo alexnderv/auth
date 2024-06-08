@@ -5,22 +5,20 @@ import TextField from "@mui/material/TextField";
 import { connect } from 'react-redux';
 import { useNavigate  } from "react-router";
 import { IconButton } from "@mui/material";
-import { addUser, editUser } from "../Redux/actions";
 import { VisibilityOff, Visibility } from "@material-ui/icons";
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
 
-function AddUser({ user, onAdd, onEdit }) {
+function AddUser({ user }) {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (user) {
-      setFormData({ ...user });
-    }
-  }, [user]);
-
-  const [formData, setFormData] = useState({
+  const [formDataAddUser, setFormDataAddUser] = useState({
     username: "",
     email:"",
+    firstname: "",
+    lastname:"",
+    phoneNumbers: [""],
     password:"",
     rate: 0,
     photo: "",
@@ -32,11 +30,17 @@ function AddUser({ user, onAdd, onEdit }) {
     quote: "",
   });
 
+  useEffect(() => {
+    if (user) {
+      setFormDataAddUser({ ...user });
+    }
+  }, [user]);
+
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
+    setFormDataAddUser((prevData) => ({
       ...prevData,
       [name]: value,
       email: name === 'username' ? value : prevData.email, // обновите email при изменении username
@@ -52,15 +56,15 @@ function AddUser({ user, onAdd, onEdit }) {
   const validateForm = () => {
     const newErrors = {};
 
-    if (formData.age < 0 ) {
+    if (formDataAddUser.age < 0 ) {
       newErrors.age = "Возраст должен быть больше нуля";
     }  
     
     const maxCharLimit = 100; 
     let isAnyFieldEmpty = false; 
 
-    Object.keys(formData).forEach((key) => {
-      const value = formData[key].toString().trim();
+    Object.keys(formDataAddUser).forEach((key) => {
+      const value = formDataAddUser[key].toString().trim();
       if (value.length > maxCharLimit) {
         newErrors[key] = `Превышен лимит символов (${maxCharLimit})`;
       } else if (value.length === 0){
@@ -80,45 +84,52 @@ function AddUser({ user, onAdd, onEdit }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
-      const userAdd = { ...formData };
+      const userAdd = { ...formDataAddUser };
+      const config = {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      };
       if (user && user.id) {
         userAdd.id = user.id;
-        axios.post(`http://localhost:8082/users/${user.id}`, userAdd, {
-          withCredentials: true
-        })
+        axios.put(`http://localhost:8082/users/${user.id}`, userAdd, config)
         .then(response => {
           console.log(response);
-          // Обновите состояние здесь, если это необходимо
+          setFormDataAddUser(response.data); // Обновляем данные пользователя
+          alert("Пользователь успешно обновлен!");
         })
-        .catch(error => console.error('Ошибка при редактировании пользователя:', error));
+        .catch(error => {
+          console.error('Ошибка при редактировании пользователя:', error);
+          alert('Ошибка при редактировании пользователя!');
+        });
       } else {
-        axios.post('http://localhost:8082/users/register', userAdd, {
-          withCredentials: true
-        })
+        axios.post('http://localhost:8082/users/register', userAdd, config)
         .then(response => {
           console.log(response);
+          setFormDataAddUser({
+            username: "",
+            email:"",
+            firstname: "",
+            lastname:"",
+            phoneNumbers: [""],
+            password:"",
+            rate: 0,
+            photo: "",
+            age: 1,
+            job: "",
+            bio: "",
+            country: "",
+            city: "",
+            quote: "",
+          }); // Очищаем форму
           alert("Пользователь успешно добавлен!");
-          // Обновите состояние здесь, если это необходимо
         })
-        .catch(error => console.error('Ошибка при добавлении пользователя:', error),
-        alert('Ошибка при добавлении пользователя!'));
+        .catch(error => {
+          console.error('Ошибка при добавлении пользователя:', error);
+          alert('Ошибка при добавлении пользователя!');
+        });
       }
-      setFormData({
-        username: "",
-        email:"",
-        firstname: "",
-        lastname:"",
-        phoneNumbers: "",
-        password:"",
-        rate: 0,
-        photo: "",
-        age: 1,
-        job: "",
-        bio: "",
-        country: "",
-        city: "",
-        quote: "",
-      });
       navigate("/users");
     }
   };
@@ -190,31 +201,26 @@ function AddUser({ user, onAdd, onEdit }) {
       <div className={classes.label}>{user ? 'Редактирование пользователя' : 'Добавление пользователя' }</div>
 
       {errors.global && <div style={{ color: "red" }}>{errors.global}</div>}
-      {Object.keys(formData).map((key) => (
+      {Object.keys(formDataAddUser).map((key) => (
         errors[key] && key !== 'global' && <div key={key} style={{ color: "red" }}>{errors[key]}</div>
       ))}
-      <TextField className={classes.input} variant="standard" label="Имя" name="firstname" value={formData.firstname} onChange={handleChange}/>
-      <TextField className={classes.input} variant="standard" label="Фамилия" name="lastname" value={formData.lastname} onChange={handleChange}/>
-      <TextField className={classes.input} variant="standard" label="Логин" name="username" value={formData.username} onChange={handleChange}/>
-      <TextField className={classes.input} variant="standard" label="Пароль" name="password" value={formData.password} onChange={handleChange}  type="password"/>
-      <TextField className={classes.input} variant="standard" label="Номер телефона" name="phoneNumbers" value={formData.phoneNumbers} onChange={handleChange}/>
-      <TextField className={classes.input} variant="standard" label="Ставка" name="rate" value={formData.rate} onChange={handleChange}/>
-      <TextField className={classes.input} variant="standard" label="Возраст" name="age" value={formData.age} onChange={handleChange} />
-      <TextField className={classes.input} variant="standard" label="Должность" name="job" value={formData.job} onChange={handleChange}/>
-      <TextField className={classes.input} variant="standard" label="БИО" name="bio" value={formData.bio} onChange={handleChange} />
-      <TextField className={classes.input} variant="standard" label="Страна" name="country" value={formData.country} onChange={handleChange}/>
-      <TextField className={classes.input} variant="standard" label="Город" name="city" value={formData.city} onChange={handleChange}/>
-      <TextField className={classes.input} variant="standard" label="Цитата" name="quote" value={formData.quote} onChange={handleChange}/>
-      <TextField className={classes.input} variant="standard" label="URL фотографии" name="photo" value={formData.photo} onChange={handleChange} />
-      <Button type="submit"  className={classes.button}>{user ? 'Редактировать' : 'Добавить'}</Button>
+      <TextField className={classes.input} variant="standard" label="Имя" name="firstname" value={formDataAddUser.firstname} onChange={handleChange}/>
+      <TextField className={classes.input} variant="standard" label="Фамилия" name="lastname" value={formDataAddUser.lastname} onChange={handleChange}/>
+      <TextField className={classes.input} variant="standard" label="Логин" name="username" value={formDataAddUser.username} onChange={handleChange}/>
+      <TextField className={classes.input} variant="standard" label="Почта" name="email" value={formDataAddUser.email} onChange={handleChange}/>
+      <TextField className={classes.input} variant="standard" label="Пароль" name="password" value={formDataAddUser.password} onChange={handleChange}  type="password"/>
+      <TextField className={classes.input} variant="standard" label="Номер телефона" name="phoneNumbers" value={formDataAddUser.phoneNumbers} onChange={handleChange}/>
+      <TextField className={classes.input} variant="standard" label="Ставка" name="rate" value={formDataAddUser.rate} onChange={handleChange}/>
+      <TextField className={classes.input} variant="standard" label="Возраст" name="age" value={formDataAddUser.age} onChange={handleChange} />
+      <TextField className={classes.input} variant="standard" label="Должность" name="job" value={formDataAddUser.job} onChange={handleChange}/>
+      <TextField className={classes.input} variant="standard" label="БИО" name="bio" value={formDataAddUser.bio} onChange={handleChange} />
+      <TextField className={classes.input} variant="standard" label="Страна" name="country" value={formDataAddUser.country} onChange={handleChange}/>
+      <TextField className={classes.input} variant="standard" label="Город" name="city" value={formDataAddUser.city} onChange={handleChange}/>
+      <TextField className={classes.input} variant="standard" label="Цитата" name="quote" value={formDataAddUser.quote} onChange={handleChange}/>
+      <TextField className={classes.input} variant="standard" label="URL фотографии" name="photo" value={formDataAddUser.photo} onChange={handleChange} />
+      <Button type="submit"  className={classes.button} onClick={handleSubmit}>{user ? 'Редактировать' : 'Добавить'}</Button>
     </form>
   );
 }
 
-// Функция для связи компонента с Redux store
-const mapDispatchToProps = (dispatch) => ({
-  onAdd: (user) => dispatch(addUser(user)), // используем исправленную функцию addUser
-  onEdit: (user) => dispatch(editUser(user)),
-});
-
-export default connect(null, mapDispatchToProps)(AddUser);
+export default AddUser;

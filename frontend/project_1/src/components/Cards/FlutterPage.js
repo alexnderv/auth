@@ -167,11 +167,6 @@ const FlutterPage = () => {
             ))}
           </Grid>
         </Container>
-        <Button style={{margin: "30px 0", 
-          fontSize: "18px", 
-          color: "black", 
-          backgroundColor: "#b4b4b4" }}
-          onClick={openJavaUser}>Перейти к специалистам</Button>
       </div>
     </ThemeProvider>
   );

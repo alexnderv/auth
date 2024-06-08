@@ -26,12 +26,12 @@
 }
 
 .user-salary-table{
-  text-align: center;
+  text-align: left;
   width: 100%;
 }
 
 .user-salary-table-td{
-  padding: 10px;
+  padding: 5px;
 }
 
 .search-container {
@@ -116,7 +116,7 @@ b {
 }
 
 @media (max-width: 900px) {
-  .user-container {
+  .user-container, .user-container-salary {
     max-width: 60%;
     border: 3px solid #ccc; 
     padding: 10px; 
@@ -151,7 +151,7 @@ b {
 }
 
 @media (max-width: 1450px) {
-  .user-container {
+  .user-container, .user-container-salary {
     border: 3px solid #ccc; 
     padding: 10px; 
   }
@@ -171,7 +171,7 @@ b {
 }
 
 @media (max-width: 1100px) {
-  .user-container {
+  .user-container, .user-container-salary {
     border: 3px solid #ccc; 
     padding: 10px; 
   }

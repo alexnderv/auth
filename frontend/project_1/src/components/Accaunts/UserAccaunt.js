@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { IoCloseCircleSharp, IoHammerSharp } from "react-icons/io5";
 import { connect } from "react-redux";
-import { deleteUser } from "../Redux/actions";
 import { useNavigate } from "react-router";
 import { createTheme } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -10,6 +9,7 @@ import axios from "axios";
 import Table from "@mui/material/Table";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import { makeStyles } from "@mui/styles";
 
 const theme = createTheme();
 
@@ -72,14 +72,20 @@ useEffect(() => {
   }
 
   const fetchTimelogs = () => {
-      axios
-          .get("http://localhost:8082/time-logs/some", { withCredentials: true })
-          .then(response => {
-              console.log(response);
-              setTimeLogData(response.data);
-          })
-          .catch(error => console.error('Ошибка при получении данных отработанных часов:', error));
+    axios
+        .get("http://localhost:8082/time-logs/some", { withCredentials: true })
+        .then(response => {
+            console.log(response);
+            const totalTimeCountHours = response.data.content.reduce((acc, item) => acc + item.timeCountHours, 0); // Считаем сумму отработанных часов
+            setTimeLogData(totalTimeCountHours);
+            console.log(totalTimeCountHours)
+        })
+        .catch(error => console.error('Ошибка при получении данных отработанных часов:', error));
   }
+
+  useEffect(() => {
+    fetchTimelogs();
+  }, []);
 
   const fetchMe = () => {
       axios
@@ -104,6 +110,23 @@ useEffect(() => {
       // Сбрасываем состояние успешности при изменении данных
       setSubmitSuccess(false);
   }
+
+  const useStyles = makeStyles({
+    button: {
+      background: 'rgb(200, 200, 200)',
+      border: 0,
+      width: "90%",
+      borderRadius: 3,
+      boxShadow: 'rgb(160, 160, 160)',
+      height: 48,
+      color: "black",
+    },
+    textField: {
+        width: "90%",
+    }
+  });
+
+  const classes = useStyles();
 
   return (
     <Grid item xs={1} sm={matchesDesktop ? 12 : 12} >
@@ -141,36 +164,25 @@ useEffect(() => {
               <table className="user-salary-table">
                   <tbody>
                   <tr>
-                      {
-                          timeLogData
-                              ? (
-                                  <React.Fragment>
-                                      <td className="user-salary-table-td"><p><b><i>Отработанные часы: </i></b> {timeLogData.timeCountHours}</p></td>
-                                  </React.Fragment>
-                              )
-                              : (<p>Loading...</p>)
-                      }
-                  </tr>
+        {
+          timeLogData && (
+              <td className="user-salary-table-td" style={{align:"left"}}><p><b><i>Общее количество отработанных часов: </i></b> {timeLogData}</p></td>
+          )
+        }
+        <td className="user-salary-table-td">
+            <React.Fragment>
+                  <TextField className={classes.textField}
+                          variant="standard"
+                          type="number"
+                          label="Отработанные часы"
+                          name="timeCountHours"
+                          onChange={e => handleTimelogChange(e)}
+                  />
+            </React.Fragment>
+            </td>
+</tr>
                   <tr>
-                      <td className="user-salary-table-td">
-                          <React.Fragment>
-                              <TextField
-                                  variant="standard"
-                                  type="number"
-                                  label="Отработанные часы"
-                                  name="timeCountHours"
-                                  onChange={e => handleTimelogChange(e)}
-                              />
-                              <Button
-                                  onClick={handleSubmit}
-                                  variant="contained">
-                                  submit
-                              </Button>
-                          </React.Fragment>
-                      </td>
-                  </tr>
-                  <tr>
-
+                  <td className="user-salary-table-td" style={{width: '55%'}}>
                       {
                           salaryData
                               ? (
@@ -179,6 +191,16 @@ useEffect(() => {
                                   </React.Fragment>)
                               : (<p>Loading...</p>)
                       }
+                      </td>
+                      <td className="user-salary-table-td">
+                          <React.Fragment>
+                              <Button className={classes.button}
+                                  type="submit"
+                                  onClick={handleSubmit}>
+                                  Добавить
+                              </Button>
+                          </React.Fragment>
+                      </td>
                   </tr>
                   </tbody>
               </table>
@@ -188,8 +210,4 @@ useEffect(() => {
     
 );}
 
-const mapDispatchToProps = (dispatch) => ({
-  onDelete: (id) => dispatch(deleteUser(id)),
-});
-
-export default connect(null, mapDispatchToProps)(UserAccaunt);
+export default UserAccaunt;
