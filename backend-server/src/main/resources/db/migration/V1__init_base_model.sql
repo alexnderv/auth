@@ -4,8 +4,8 @@ create sequence time_log_id_seq start with 2 increment by 1;
 create table auth_user
 (
     id                  bigint       not null,
-    email               varchar(100) not null,
-    username            varchar(100) not null,
+    email               varchar(100) not null unique,
+    username            varchar(100) not null unique,
     password            varchar(255) not null,
     first_name          varchar(100) not null,
     last_name           varchar(100) not null,
