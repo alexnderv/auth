@@ -22,10 +22,8 @@ const [salaryData, setSalaryData] = useState(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [errors, setErrors] = useState({});
 
-  const handleEditClick = () => {
-    if (usersData && usersData.id) {
-      navigate("/edit", { state: { userId: usersData.id } });
-    }
+  const handleEditClick = (id) => {
+      navigate("/edit", { state: { userId: id, isAdmin: true } });    
   };
 
   const handleSubmit = () => {
@@ -91,18 +89,18 @@ const handleTimelogChange = (e) => {
   setSubmitSuccess(false);
 }
 
-  const handleDeleteClick = (id) => {
-    axios
-      .delete(`http://localhost:8082/users/${usersData.id}`, {
-        withCredentials: true,
-      })
-      .then((response) => {
-        console.log(response);
-        setUsersData(usersData.filter((user) => user.id !== id));
-        alert('Успешное удаление пользователя!');
-      })
-      .catch((error) => console.error('Ошибка при удалении пользователя:', error));
-  };
+const handleDeleteClick = (id) => {
+  axios
+    .delete(`http://localhost:8082/users/${id}`, {
+      withCredentials: true,
+    })
+    .then((response) => {
+      console.log(response);
+      setUsersData(usersData.filter((user) => user.id !== id));
+      alert('Успешное удаление пользователя!');
+    })
+    .catch((error) => console.error('Ошибка при удалении пользователя:', error));
+};
 
   useEffect(() => {
     // Запрос данных всех пользователей с сервера
@@ -152,69 +150,40 @@ const handleTimelogChange = (e) => {
                             <h3>{user.firstName} {user.lastName}, {user.age} лет</h3>
                             <p style={{color: "grey", marginBottom: "20px"}}>{user.job}</p>
                             <p><b><i>Почта:</i></b> {user.email}</p>
-                            <p><b><i>Телефон:</i></b> {user.phoneNumbers}</p>
+                            <p><b><i>Телефон:</i></b> {user.phoneNumber}</p>
                             <p><b><i>Ставка:</i></b> {user.rate}</p>
                             <p><b><i>БИО:</i></b> {user.bio}</p>
                             <p style={{marginTop: "5px"}}><i><b>Цитата:</b></i> {user.quote}</p>
                             <p style={{marginTop: "20px"}}><i>{user.country}, {user.city}</i></p>
+                            <div className="user-actions">
+                            <IoHammerSharp onClick={() => handleEditClick(user.id)} className="edit-icon" />
+                            <IoCloseCircleSharp onClick={() => handleDeleteClick(user.id)} className="delete-icon" />                          </div>
                           </React.Fragment>
                       )
                       : (<p>Loading...</p>)
                 }
-                <div className="user-actions">
-                  <IoHammerSharp onClick={handleEditClick} className="edit-icon" />
-                    <IoCloseCircleSharp onClick={handleDeleteClick} className="delete-icon" />
-                </div>
               </div>
 
             </div>
-        </div>
-      ))}
       <div className="user-container-salary">
               <table className="user-salary-table">
                   <tbody>
                   <tr>
-        {
-          timeLogData && (
-              <td className="user-salary-table-td" style={{align:"left"}}><p><b><i>Общее количество отработанных часов: </i></b> {timeLogData}</p></td>
-          )
-        }
-        <td className="user-salary-table-td">
-            <React.Fragment>
-                  <TextField className={classes.textField}
-                          variant="standard"
-                          type="number"
-                          label="Отработанные часы"
-                          name="timeCountHours"
-                          onChange={e => handleTimelogChange(e)}
-                  />
-            </React.Fragment>
-            </td>
-</tr>
+                    <td className="user-salary-table-td" style={{align:"left"}}><p><b><i>Общее количество отработанных часов: </i>
+                    </b> {user.timeCountHours}</p></td>
+                  </tr>
                   <tr>
                   <td className="user-salary-table-td" style={{width: '55%'}}>
-                      {
-                          salaryData
-                              ? (
                                   <React.Fragment>
-                                      <p><b><i>Заработанная плата: </i></b> {salaryData.salary}</p>
-                                  </React.Fragment>)
-                              : (<p>Loading...</p>)
-                      }
-                      </td>
-                      <td className="user-salary-table-td">
-                          <React.Fragment>
-                              <Button className={classes.button}
-                                  type="submit"
-                                  onClick={handleSubmit}>
-                                  Добавить
-                              </Button>
-                          </React.Fragment>
+                                      <p><b><i>Заработанная плата: </i></b> {user.salary}</p>
+                                  </React.Fragment>
                       </td>
                   </tr>
                   </tbody>
               </table>
           </div>
+          </div>
+      ))}
     </Grid>
   );
 }

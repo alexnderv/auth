@@ -10,7 +10,7 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 
 function AddUser({ user }) {
-
+  const navigate = useNavigate();
   const [formDataAddUser, setFormDataAddUser] = useState({
     username: "",
     email:"",

@@ -30,9 +30,9 @@ useEffect(() => {
     fetchSalary();
 }, []);
 
-  const handleEditClick = () => {
+  const handleEditClick = (id) => {
     if (formData && formData.id) {
-      navigate("/edit", { state: { userId: formData.id } });
+        navigate("/edit", { state: { userId: id, isAdmin: false } });
     }
   };
 
@@ -150,13 +150,13 @@ useEffect(() => {
                                   <p><b><i>БИО:</i></b> {formData.bio}</p>
                                   <p style={{marginTop: "5px"}}><i><b>Цитата:</b></i> {formData.quote}</p>
                                   <p style={{marginTop: "20px"}}><i>{formData.country}, {formData.city}</i></p>
+                                  <div className="user-actions">
+                                    <IoHammerSharp onClick={() => handleEditClick(formData.id)} className="edit-icon" />
+                                </div>
                               </React.Fragment>
                           )
                           : ( <p>Loading...</p> )
                   }
-                  <div className="user-actions">
-                <IoHammerSharp onClick={handleEditClick} className="edit-icon" />
-              </div>
             </div>
           </div>
 
