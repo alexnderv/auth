@@ -122,6 +122,7 @@ function AddUser({ user }) {
                 city: "",
                 quote: "",
             });
+            navigate('/users');
         })
         .catch(error => console.error('Ошибка при добавлении пользователя:', error));
       }
