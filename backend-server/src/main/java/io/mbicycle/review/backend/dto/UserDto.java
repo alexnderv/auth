@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +19,7 @@ import org.hibernate.validator.constraints.Length;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDto {
-  @NotBlank(groups = UpdateUser.class)
+  @NotNull(groups = UpdateUser.class)
   private Long id;
   @NotBlank(message = "The email is required", groups = CreateUser.class)
   @Length(min = 8, max = 100, groups = { CreateUser.class, UpdateUser.class, ResetPassword.class })

@@ -131,9 +131,11 @@ public class UsersController {
   }
 
   @PutMapping("{id}")
-  @PreAuthorize("authentication.principal.username == #dto.username")
-  public ResponseEntity<UserDto> update(@RequestBody @Validated(UserDto.UpdateUser.class) UserDto dto) {
-    User updated = userService.register(mapper.map(dto, User.class));
+  @PreAuthorize("authentication.principal.username == #dto.username || hasRole('ROLE_ADMIN')")
+  public ResponseEntity<UserDto> update(
+      @PathVariable Long id,
+      @RequestBody @Validated(UserDto.UpdateUser.class) UserDto dto) {
+    User updated = userService.update(id, mapper.map(dto, User.class));
     return ResponseEntity.ok(mapper.map(updated, UserDto.class));
   }
 

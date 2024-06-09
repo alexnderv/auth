@@ -69,4 +69,28 @@ public class UserService implements UserDetailsService {
     return dao.findAllByNames(query.toLowerCase());
   }
 
+  public User update(Long id, User updated) {
+    User actual = dao.findById(id)
+        .map(u -> {
+          u.setUsername(updated.getUsername());
+          u.setPassword(updated.getPassword());
+          u.setEmail(updated.getEmail());
+          u.setFirstName(updated.getFirstName());
+          u.setLastName(updated.getLastName());
+          u.setRate(updated.getRate());
+          u.setPhoto(updated.getPhoto());
+          u.setAge(updated.getAge());
+          u.setJob(updated.getJob());
+          u.setBio(updated.getBio());
+          u.setCountry(updated.getCountry());
+          u.setCity(updated.getCity());
+          u.setQuote(updated.getQuote());
+          u.setPhoneNumber(updated.getPhoneNumber());
+          return u;
+        })
+        .orElseThrow();
+
+    return dao.save(actual);
+  }
+
 }
