@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from "react";
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -11,11 +11,18 @@ import Button from '@mui/material/Button';
 import AdbIcon from '@mui/icons-material/Adb';
 import { Link } from "react-router-dom";
 import MenuItem from '@mui/material/MenuItem';
-import { useState } from 'react';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-
+import axios from 'axios';
+import { makeStyles } from "@mui/styles";
 
 function Header() {
+  const useStyles = makeStyles({
+    menu: {
+      marginLeft: "25%",
+    },
+  });
+
+  const classes = useStyles();
 
   const [formData, setFormData] = useState({
     username: "",
@@ -53,14 +60,33 @@ function Header() {
     setAnchorElNav2(event.currentTarget);
   };
 
+  const signOut = () => {
+    axios
+      .post("http://localhost:8082/logout", {}, { withCredentials: true })
+      .then(response => {
+        console.log(response);
+        setAuth(false); // Устанавливаем auth в false после выхода из системы
+      })
+      .catch(error => console.error('Ошибка при выходе из системы:', error));
+  }
+
+  const fetchMe = () => {
+    axios
+        .get("http://localhost:8082/users/me", { withCredentials: true })
+        .then(response => {
+            console.log(response);
+            const data = response.data;
+            setFormData(data);
+        })
+        .catch(error => console.error('Ошибка при получении данных пользователя:', error));
+}
+
+useEffect(() => {
+  fetchMe()
+}, []);
+
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
-    // Проверьте, является ли пользователь администратором
-    if (formData.username === 'admin@test.io') {
-      setRole('admin');
-    } else {
-      setRole('user');
-    }
   };
 
   const handleClick = (event) => {
@@ -75,10 +101,6 @@ function Header() {
     setAnchorElNav(null);
   };
   
-
-  const handleCloseNavMenu2 = () => {
-    setAnchorElNav2(null);
-  };
 
   return (
     <AppBar position="static"
@@ -176,6 +198,24 @@ function Header() {
                     },}}>
                   Разработка Flutter
                 </Button>
+                {auth && formData.authorities && formData.authorities.includes('ROLE_ADMIN') && (
+                  <>
+                  <Button component={Link} to="/users" color="inherit" disabled={activePath === "/users"} onClick={() => handlePathChange("/users")}
+                  sx={{
+                    "&.Mui-disabled": {
+                      color:"#e4e4e4",
+                    },}}>
+                  Персонал
+                </Button>
+                <Button component={Link} to="/add" color="inherit" disabled={activePath === "/add"} onClick={() => handlePathChange("/add")}
+                  sx={{
+                    "&.Mui-disabled": {
+                      color:"#e4e4e4",
+                    },}}>
+                  Добавление сотрудника
+                </Button>
+                </>
+                )}
               </MenuItem>
             
             </Menu>
@@ -211,16 +251,17 @@ function Header() {
                 Разработки 
               </Button>
               <Menu
+              className={classes.menu}
                 id="menu-appbar"
                 anchorEl2={anchorEl2}
                 anchorOrigin={{
                   vertical: 'top',
-                  horizontal: 'right',
+                  horizontal: 'left',
                 }}
                 keepMounted
                 transformOrigin={{
                   vertical: 'top',
-                  horizontal: 'right',
+                  horizontal: 'left',
                 }}
                 open={Boolean(anchorEl2)}
                 onClose={handleClose2}
@@ -230,7 +271,7 @@ function Header() {
                 <MenuItem component={Link} to="/flutter-development" color="inherit" disabled={activePath === "/flutter-development"} onClick={() => {handlePathChange("/java-development"); handleClose()}}>Flutter</MenuItem>
               </Menu>
             </div>
-          {auth && role === 'user' && (
+          {auth && formData.authorities && formData.authorities.includes('ROLE_ADMIN') && (
         <>
           <Button component={Link} to="/users" color="inherit"  disabled={activePath === "/users"} onClick={() => handlePathChange("/users")}
            sx={{
@@ -248,15 +289,7 @@ function Header() {
             </Button>
             </>
             )}
-            {auth && role !== 'admin' && (
-            <Button component={Link} to="/userAccaunt" color="inherit" disabled={activePath === "/userAccaunt"} onClick={() => handlePathChange("/userAccaunt")}
-            sx={{
-              "&.Mui-disabled": {
-                color:"#e4e4e4",
-              },}}> Личный аккаунт </Button>
-            )}
           </Box>
-          {auth && (
             <div>
             <IconButton
               size="large"
@@ -284,19 +317,17 @@ function Header() {
               onClose={handleClose}
             >
               <MenuItem component={Link} to="/auth" color="inherit" disabled={activePath === "/auth"} onClick={() => {handlePathChange("/auth"); handleClose()}}>Авторизоваться</MenuItem>
-              {auth && role === 'user' && (
-              <MenuItem component={Link} to="/userAccaunt" color="inherit" disabled={activePath === "/userAccaunt"} onClick={() => {handlePathChange("/userAccaunt"); handleClose()}}>Личный аккаунт</MenuItem>
-              )}
-              {auth && (
-              <MenuItem component={Link} to="/" color="inherit" disabled={activePath === "/index"} onClick={() => {auth.signOut(); handlePathChange("/index"); handleClose()}}>Выход</MenuItem>
-              )}
+              {auth && formData.authorities && (
+                <>
+                <MenuItem component={Link} to="/userAccaunt" color="inherit" disabled={activePath === "/userAccaunt"} onClick={() => {handlePathChange("/userAccaunt"); handleClose()}}>Личный аккаунт</MenuItem>
+                <MenuItem component={Link} to="/" color="inherit" disabled={activePath === "/index"} onClick={() => {signOut(); handlePathChange("/index");}}>Выход</MenuItem>
+             </>
+               )}
             </Menu>
           </div>
-          )}
         </Toolbar>
       </Container>
     </AppBar>
-    
   );
 }
 

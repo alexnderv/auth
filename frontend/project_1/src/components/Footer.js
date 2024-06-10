@@ -37,7 +37,8 @@ const Footer = () => {
   const classes = useStyles();
 
   return (
-    <footer className={classes.footer}>
+    <div className={"footerClasses"}>
+      <footer className={classes.footer}>
       <Grid container className={classes.gridContainer}>
         <Grid item xs={12} sm={4}>
           <Typography variant="h6" className={classes.sectionTitle}>
@@ -83,6 +84,7 @@ const Footer = () => {
         </Grid>
       </Grid>
     </footer>
+    </div>
   );
 };
 

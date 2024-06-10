@@ -123,6 +123,11 @@ b {
     flex-direction: column;
   }
 
+  .footerClasses {
+    margin-top: 22px;
+    font-size: 16px;
+  }
+
   .user-image {
     margin-right: 10px;
     margin-bottom: 10px; 
@@ -161,6 +166,11 @@ b {
     margin-right: 10px;
   }
 
+  .footerClasses {
+    margin-top: 20px;
+    font-size: 20px;
+  }
+
   .user-details {
     font-size: 18px; 
   }
@@ -179,6 +189,11 @@ b {
   .user-image {
     max-width: 100%;
     margin-right: 10px;
+  }
+
+  .footerClasses {
+    margin-top: 20px;
+    font-size: 19px;
   }
 
   .user-details {

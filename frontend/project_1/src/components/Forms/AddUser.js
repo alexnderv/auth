@@ -58,7 +58,7 @@ function AddUser({ user }) {
       newErrors.age = "Возраст должен быть больше нуля";
     }  
     
-    const maxCharLimit = 100; 
+    const maxCharLimit = 1000; 
     let isAnyFieldEmpty = false; 
 
     Object.keys(formDataAddUser).forEach((key) => {
@@ -91,10 +91,16 @@ function AddUser({ user }) {
       };
       if (user && user.id) {
         userAdd.id = user.id;
+        userAdd.authorities = user.authorities;
         axios.put(`http://localhost:8082/users/${user.id}`, userAdd, config)
         .then(response => {
           console.log(response);
           setFormDataAddUser(response.data); // Обновляем данные пользователя
+          if (user.authorities === "ROLE_ADMIN") {
+            navigate("/users");
+          } else {
+          navigate("/userAccaunt")
+          }
           alert("Пользователь успешно обновлен!");
         })
         .catch(error => {

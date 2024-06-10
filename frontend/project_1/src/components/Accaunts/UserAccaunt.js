@@ -145,7 +145,7 @@ useEffect(() => {
                                   <h3>{formData.firstName} {formData.lastName}, {formData.age} лет</h3>
                                   <p style={{color: "grey", marginBottom: "20px"}}>{formData.job}</p>
                                   <p><b><i>Почта:</i></b> {formData.email}</p>
-                                  <p><b><i>Телефон:</i></b> {formData.phoneNumbers}</p>
+                                  <p><b><i>Телефон:</i></b> {formData.phoneNumber}</p>
                                   <p><b><i>Ставка:</i></b> {formData.rate}</p>
                                   <p><b><i>БИО:</i></b> {formData.bio}</p>
                                   <p style={{marginTop: "5px"}}><i><b>Цитата:</b></i> {formData.quote}</p>

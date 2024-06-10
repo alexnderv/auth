@@ -26,39 +26,6 @@ const [salaryData, setSalaryData] = useState(null);
       navigate("/edit", { state: { userId: id, isAdmin: true } });    
   };
 
-  const handleSubmit = () => {
-    axios.post("http://localhost:8082/time-logs",
-        timeLogDataAdd,
-        {
-            withCredentials: true,
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        })
-    .then(response => {
-      console.log(response);
-      setTimeLogDataAdd(response.data);
-      fetchSalary();
-      fetchTimelogs()
-      // Устанавливаем состояние успешности операции в true
-      setSubmitSuccess(true);
-    })
-    .catch(error => {
-      console.error('Ошибка при добавлении данных отработанных часов:', error);
-      setSubmitSuccess(false);
-    });
-};
-
-const fetchSalary = () => {
-  axios
-      .get("http://localhost:8082/statistics/salary", { withCredentials: true })
-      .then(response => {
-          console.log(response);
-          setSalaryData(response.data);
-      })
-      .catch(error => console.error('Ошибка при получении заработной платы:', error));
-}
-
 const fetchTimelogs = () => {
 axios
     .get("http://localhost:8082/time-logs/all", { withCredentials: true })
@@ -75,19 +42,6 @@ useEffect(() => {
 fetchTimelogs();
 }, []);
 
-const handleTimelogChange = (e) => {
-  const { name, value } = e.target;
-  setTimeLogDataAdd((prevData) => ({
-      ...prevData,
-      [name]: value,
-  }));
-  setErrors((prevErrors) => ({
-      ...prevErrors,
-      [name]: "",
-  }));
-  // Сбрасываем состояние успешности при изменении данных
-  setSubmitSuccess(false);
-}
 
 const handleDeleteClick = (id) => {
   axios

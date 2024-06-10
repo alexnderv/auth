@@ -2,13 +2,12 @@ import React, { useState, useEffect } from "react";
 import AddUser from "./AddUser";
 import axios from 'axios';
 import { useLocation  } from "react-router";
+import { useNavigate } from "react-router";
 
 function EditUser({ users, setUsers }) {
-
+  const navigate = useNavigate();
   const user = users?.find(user => user.id === userId);
-
   const [editedUser, setEditedUser] = useState(null);
-  
   const { state } = useLocation();
 const { userId, isAdmin } = state;
 
